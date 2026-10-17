@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, FileWarning, RefreshCw } from "lucide-react";
-import { business, locations, services } from "@/content/site";
+import { business, locations, serviceRadiusMiles, services } from "@/content/site";
 import { keywordTargets } from "@/content/marketing";
 import { AdminShell } from "@/components/admin/shell";
 import { Panel, StatCard, Table, Td } from "@/components/admin/ui";
@@ -50,12 +50,11 @@ const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
 export default function AdminSeo() {
   const { report, state } = useSeoReport();
-  const cityServicePages = locations.length * services.length;
 
   return (
     <AdminShell
       title="SEO & GEO"
-      lead="Measured from the built site, not estimated. Figures refresh when you run pnpm build && pnpm audit:seo."
+      lead="With no paid media in the plan, organic search and answer-engine citations are the growth engine. Measured from the built site, not estimated — figures refresh when you run pnpm build && pnpm audit:seo."
     >
       {state === "missing" && (
         <div className="flex items-start gap-3 rounded-lg border border-navy/15 bg-white px-4 py-3">
@@ -144,11 +143,11 @@ export default function AdminSeo() {
           <ul className="space-y-2.5 text-sm">
             {[
               "One linked @graph per page, not separate blocks",
-              "HVACBusiness with geo, a 50-mile GeoCircle and every city geocoded",
-              "hasOfferCatalog across all six services",
+              `GeneralContractor / RoofingContractor / HVACBusiness, geocoded with a ${serviceRadiusMiles}-mile service circle and every city`,
+              "hasOfferCatalog across all four divisions",
               "hasCredential for all three DBPR licences",
               "Service nodes with areaServed contained in their county",
-              "FAQPage on every service, city and service × city page",
+              "FAQPage on the home page and every division page",
               "speakable pointed at h1 and [data-answer] for answer engines",
             ].map((t) => (
               <li key={t} className="flex gap-2.5 text-navy/75">
@@ -173,15 +172,15 @@ export default function AdminSeo() {
         </Panel>
 
         <Panel
-          title="Answer-engine surface"
-          subtitle="What the site gives GPT, Claude, Perplexity and AI Overviews to work with."
+          title="Answer-engine surface (GEO)"
+          subtitle="A core channel in an organic plan: what the site gives GPT, Claude, Perplexity and Google AI Overviews to cite when they answer a SWFL question."
         >
           <ul className="space-y-2.5 text-sm">
             {[
               "llms.txt generated at build time from the content file",
               "robots.txt names GPTBot, ClaudeBot, PerplexityBot, Google-Extended and others explicitly",
               "Every substantial page opens with a self-contained [data-answer] block",
-              "City pages render local facts as a real table, not styled divs",
+              "The coverage page renders local facts as a real table, not styled divs",
               "Descriptions clamped to 158 chars on a word boundary",
             ].map((t) => (
               <li key={t} className="flex gap-2.5 text-navy/75">
@@ -202,27 +201,21 @@ export default function AdminSeo() {
       >
         <Table columns={["Page set", "Count", "Generated from", "Layout"]}>
           <tr>
-            <Td className="font-medium text-navy">Service × city</Td>
-            <Td>{cityServicePages}</Td>
-            <Td muted>{locations.length} cities × {services.length} services</Td>
-            <Td muted>Narrow reading column, answer first</Td>
-          </tr>
-          <tr>
-            <Td className="font-medium text-navy">City landing</Td>
-            <Td>{locations.length}</Td>
-            <Td muted>content/site.ts locations</Td>
-            <Td muted>Wide service matrix + fact table</Td>
-          </tr>
-          <tr>
-            <Td className="font-medium text-navy">Service</Td>
+            <Td className="font-medium text-navy">Division</Td>
             <Td>{services.length}</Td>
             <Td muted>content/site.ts services</Td>
-            <Td muted>One layout per service detail.kind</Td>
+            <Td muted>One division page each — roofing, contracting, HVAC</Td>
+          </tr>
+          <tr>
+            <Td className="font-medium text-navy">Coverage</Td>
+            <Td>1</Td>
+            <Td muted>content/site.ts locations</Td>
+            <Td muted>Single /locations page — service matrix + fact table</Td>
           </tr>
           <tr>
             <Td className="font-medium text-navy">Company & legal</Td>
             <Td>7</Td>
-            <Td muted>Home, about, financing, contact, indexes, legal</Td>
+            <Td muted>Home, services index, about, financing, contact, legal</Td>
             <Td muted>Bespoke</Td>
           </tr>
         </Table>
@@ -230,7 +223,7 @@ export default function AdminSeo() {
 
       <Panel
         title="Keyword targets"
-        subtitle={`Template terms expanded across ${locations.length} cities. {city} and {county} substitute per page.`}
+        subtitle={`Grouped by division across ${locations.length} cities. Local "{city}" variants all point at the one division page and the Business Profile — there are no per-city pages to split them across.`}
       >
         <Table columns={["Term", "Intent", "Priority", "Target page"]}>
           {keywordTargets.map((k) => (

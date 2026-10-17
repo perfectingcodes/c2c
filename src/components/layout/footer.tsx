@@ -32,17 +32,15 @@ export function Footer() {
           {/* ------------------------------------------------ brand block */}
           <div>
             <img
-              src="/brand/logo-mascot.webp"
-              srcSet="/brand/logo-mascot-sm.webp 480w, /brand/logo-mascot.webp 1200w"
-              sizes="288px"
+              src="/brand/logo-contracting.webp"
               alt={business.name}
-              width={1200}
-              height={1034}
-              className="h-36 w-auto drop-shadow-[0_14px_28px_rgb(4_16_29/0.5)] md:h-40"
+              width={1024}
+              height={906}
+              className="h-32 w-auto drop-shadow-[0_14px_28px_rgb(4_16_29/0.5)] md:h-36"
               loading="lazy"
             />
             <p className="mt-5 font-display text-lg font-extrabold leading-tight">
-              <span className="block text-cyan">Florida Comfort.</span>
+              <span className="block text-cyan">Roofing. Contracting. HVAC.</span>
               <span className="block text-white">Coast to Coast.</span>
             </p>
             <p className="brandline mt-5 text-xl text-gold">{business.promise}</p>
@@ -143,7 +141,7 @@ export function Footer() {
             {locations.map((l) => (
               <li key={l.slug}>
                 <Link
-                  href={`/locations/${l.slug}`}
+                  href="/locations"
                   className="flex min-h-9 items-center rounded-full px-3 ring-1 ring-white/15 transition-colors hover:bg-white/10 hover:text-white sm:px-3.5"
                 >
                   {l.city}
@@ -157,7 +155,8 @@ export function Footer() {
 
         <div className="mt-4 flex flex-col gap-3 border-t border-white/12 pt-6 text-xs text-white/55 md:flex-row md:items-center md:justify-between">
           <p>
-            © {year} {business.name}. All rights reserved. · License #{business.license}
+            © {year} {business.legalName}. All rights reserved. · FL Lic.{" "}
+            {business.licenses.map((l) => l.number).join(" · ")}
           </p>
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <Link href="/privacy" className="flex min-h-9 items-center hover:text-white">

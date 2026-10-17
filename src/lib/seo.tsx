@@ -141,12 +141,18 @@ const SERVICE_RADIUS_M = Math.round(serviceRadiusMiles * 1609.344);
 
 export function businessNode(): Record<string, unknown> {
   return {
-    "@type": ["HVACBusiness", "LocalBusiness", "Organization"],
+    "@type": [
+      "GeneralContractor",
+      "RoofingContractor",
+      "HVACBusiness",
+      "LocalBusiness",
+      "Organization",
+    ],
     "@id": ID.business,
     name: business.name,
     legalName: business.legalName,
     slogan: business.tagline,
-    description: `Licensed, insured HVAC contractor serving ${region} — heating, cooling, mechanical, indoor air quality, maintenance and 24/7 emergency response.`,
+    description: `Licensed, insured contractor serving ${region} — roofing, general contracting and HVAC under one company, with 24/7 emergency response.`,
     url: business.url,
     telephone: business.phone,
     email: business.email,
@@ -204,7 +210,7 @@ export function businessNode(): Record<string, unknown> {
     })),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
-      name: `HVAC services in ${region}`,
+      name: `Roofing, contracting and HVAC in ${region}`,
       itemListElement: services.map((s) => ({
         "@type": "Offer",
         itemOffered: {
@@ -224,12 +230,14 @@ export function businessNode(): Record<string, unknown> {
       category: "HVAC maintenance",
     },
     knowsAbout: [
+      "roof replacement",
+      "roof repair",
+      "storm damage restoration",
+      "home remodeling",
+      "general contracting",
       "air conditioning repair",
       "HVAC replacement",
-      "heat pumps",
       "indoor air quality",
-      "ductwork",
-      "commercial HVAC",
     ],
     sameAs: [
       business.social.google,

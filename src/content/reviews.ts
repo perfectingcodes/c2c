@@ -59,7 +59,9 @@ export const reviewSequence: ReviewStep[] = [
     title: "Text the link while it is still today",
     why: "Sent two hours after the job closes. The ask is already agreed to in person, so this is only the link.",
     template:
-      "Hi {{first}}, {{tech}} here from Coast to Coast Air. Thanks for having us out today. If you have 30 seconds, a Google review really helps a local shop like ours: {{link}}",
+      "Hi {{first}}, {{tech}} here from " +
+      business.shortName +
+      ". Thanks for having us out today. If you have 30 seconds, a Google review really helps a local company like ours: {{link}}",
   },
   {
     id: "email-day-3",
@@ -69,9 +71,11 @@ export const reviewSequence: ReviewStep[] = [
     title: "One email, with something to say",
     why: "Most people mean to and forget. Naming what to mention is the difference between a star rating and a review that ranks.",
     template:
-      "Subject: Thanks again, {{first}}\n\nHi {{first}},\n\nThanks for trusting us with your system this week. If you have a minute, a short Google review would mean a lot — it is how most of our {{city}} work finds us.\n\nIf you are not sure what to write, what helps other homeowners most is simply: what was wrong, how quickly we got there, and whether the price matched the quote.\n\nLeave a review: {{link}}\n\nAnd if anything is not sitting right, reply to this email or call " +
+      "Subject: Thanks again, {{first}}\n\nHi {{first}},\n\nThanks for trusting us with your home this week. If you have a minute, a short Google review would mean a lot — it is how most of our {{city}} work finds us.\n\nIf you are not sure what to write, what helps other homeowners most is simply: what the job was, how quickly we got to it, and whether the price matched the quote.\n\nLeave a review: {{link}}\n\nAnd if anything is not sitting right, reply to this email or call " +
       business.phone +
-      " and we will come back out.\n\n— The team at Coast to Coast Air\nLicence " +
+      " and we will come back out.\n\n— The team at " +
+      business.shortName +
+      "\nLicence " +
       business.license,
   },
   {
@@ -82,7 +86,7 @@ export const reviewSequence: ReviewStep[] = [
     title: "Last nudge, then stop",
     why: "A third ask converts. A fourth annoys. The sequence ends here whether or not they reviewed.",
     template:
-      "Hi {{first}} — last note from us, promise. If the AC is still running right, a quick Google review helps us more than you'd think: {{link}} Thanks either way.",
+      "Hi {{first}} — last note from us, promise. If you're happy with how the work turned out, a quick Google review helps us more than you'd think: {{link}} Thanks either way.",
   },
   {
     id: "stop",
@@ -100,7 +104,9 @@ export const unhappyBranch = {
   title: "If they reply unhappy, the sequence stops",
   body: "Any reply that is not positive cancels the remaining steps and becomes a callback within the hour. A customer who tells you privately that something is wrong is doing you a favour; the worst possible outcome is the day-7 nudge landing on top of an unresolved complaint.",
   template:
-    "Hi {{first}}, this is the office at Coast to Coast Air. I saw your message and I would rather fix it than leave it. Are you free for a call in the next hour, or would later today suit you better? We will get someone back out.",
+    "Hi {{first}}, this is the office at " +
+    business.shortName +
+    ". I saw your message and I would rather fix it than leave it. Are you free for a call in the next hour, or would later today suit you better? We will get someone back out.",
 };
 
 /** Google's rules, stated as rules rather than suggestions. */
@@ -108,7 +114,7 @@ export const reviewRules: { rule: string; detail: string }[] = [
   {
     rule: "Never offer anything in exchange",
     detail:
-      "No discounts, no entries into a draw, no free filters. Google prohibits incentivised reviews and removes them, and the Florida market is small enough that competitors report it.",
+      "No discounts, no entries into a draw, no free filters or inspections. Google prohibits incentivised reviews and removes them, and the Florida market is small enough that competitors report it.",
   },
   {
     rule: "Ask everyone, not only the happy ones",
@@ -137,12 +143,12 @@ export const replyTemplates: { label: string; when: string; body: string }[] = [
   {
     label: "Five stars",
     when: "Positive, with detail",
-    body: "Thank you, {{first}} — glad {{tech}} got you sorted. Mentioning the turnaround helps other {{city}} homeowners know what to expect. We are here if anything comes up.",
+    body: "Thank you, {{first}} — glad {{tech}} got you sorted. Mentioning the turnaround helps other {{city}} homeowners know what to expect. We are here if anything comes up, on this job or the next one.",
   },
   {
     label: "Five stars, no words",
     when: "A bare rating",
-    body: "Thanks for the five stars, {{first}}. We appreciate you taking the time, and we are a phone call away if the system needs anything.",
+    body: "Thanks for the five stars, {{first}}. We appreciate you taking the time, and we are a phone call away if anything needs attention down the line.",
   },
   {
     label: "Three stars",
@@ -175,7 +181,7 @@ export const automationGaps: { what: string; needs: string }[] = [
   },
   {
     what: "A trigger when a job closes",
-    needs: "Whatever the office uses to close jobs — Jobber, Housecall Pro, ServiceTitan or a spreadsheet — has to emit 'job complete' with a name and mobile number.",
+    needs: "Whatever the office uses to close jobs — Jobber, Housecall Pro, JobNimbus or a spreadsheet — has to emit 'job complete' with a name and mobile number.",
   },
   {
     what: "Something that sends",

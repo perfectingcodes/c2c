@@ -9,26 +9,22 @@ import { AdminShell } from "@/components/admin/shell";
 import { Panel, StatCard, StatusPill, Table, Td } from "@/components/admin/ui";
 
 export default function AdminMarketing() {
-  const proposed = channels
-    .map((c) => Number(c.budget.replace(/[^0-9]/g, "")) || 0)
-    .reduce((a, b) => a + b, 0);
-
   return (
     <AdminShell
       title="Marketing plan"
-      lead={`${planMeta.version} — drafted ${planMeta.drafted} from the site's own content. Budgets and targets are proposals for ${business.name} to confirm, not commitments.`}
+      lead={`${planMeta.version} — drafted ${planMeta.drafted} from the site's own content. An organic plan for ${business.name}: Business Profile, SEO and GEO, no paid media. Targets are proposals to confirm, not commitments.`}
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
-          label="Proposed monthly spend"
-          value={`$${proposed.toLocaleString()}`}
-          hint="Paid channels only, excludes labour"
+          label="Media spend"
+          value="$0"
+          hint="Organic only — Business Profile, SEO and GEO"
         />
         <StatCard label="Channels in plan" value={channels.length} />
         <StatCard
-          label="Lead offer"
+          label="HVAC offer"
           value={cleanAndTune.price}
-          hint={`${cleanAndTune.name}, 10-point service`}
+          hint="Clean & Tune — roofing and remodels close on a free estimate"
         />
       </div>
 
@@ -65,7 +61,7 @@ export default function AdminMarketing() {
 
       <Panel
         title="Content calendar"
-        subtitle="One substantial piece a month, each tied to a campaign rather than published in isolation."
+        subtitle="One substantial organic piece a month, each tied to a seasonal play rather than published in isolation."
       >
         <Table columns={["Month", "Piece", "Channel", "Supports"]}>
           {contentCalendar.map((c) => (
@@ -112,8 +108,8 @@ export default function AdminMarketing() {
         </Table>
         <p className="mt-4 text-xs leading-relaxed text-navy/50">
           Seasonal-home cities (Naples, North Naples, Bonita Springs) shift
-          spend toward the winter months. Storm-affected cities carry more
-          replacement and insurance work.
+          organic focus toward the winter months. Storm-affected cities carry
+          more replacement and insurance work.
         </p>
       </Panel>
     </AdminShell>

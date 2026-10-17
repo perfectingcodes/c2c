@@ -70,7 +70,7 @@ export default function LegalPage({ slug }: { slug: Slug }) {
     <>
       <Seo
         title={`${doc.title} | ${business.name}`}
-        description={`${doc.title} for ${business.formalName}, the licensed HVAC contractor serving Southwest Florida from ${business.city}. Last updated September 2026.`}
+        description={`${doc.title} for ${business.formalName}, the licensed roofing, contracting and HVAC company serving Southwest Florida from ${business.city}. Last updated September 2026.`}
         noindex
         path={`/${slug}`}
       />

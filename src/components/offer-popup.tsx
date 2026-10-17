@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Phone, X } from "lucide-react";
-import { business, cleanAndTune } from "@/content/site";
+import { business, estimate } from "@/content/site";
 import { loadCrm, track } from "@/lib/leads";
 import { cn } from "@/lib/utils";
 
 /**
- * The $89 offer, as a modal.
+ * The free-estimate offer, as a modal.
  *
  * Popups are hated when they are badly timed and tolerated when they are not,
  * so this one earns its place:
@@ -18,11 +18,8 @@ import { cn } from "@/lib/utils";
  * - Escape closes it, focus is trapped while it is open and returned to the
  *   page when it closes, and the page behind it cannot scroll.
  *
- * It also carries no fake urgency and no struck-through "was" price. The
- * anchor price this offer discounts from is unconfirmed (see the note in
- * content/site.ts and the conflicts list in the admin), and inventing one to
- * make a popup convert is exactly the kind of thing that is hard to walk
- * back. $89 is a real published price and it is enough on its own.
+ * It carries no fake urgency. Roofing and contracting are quoted rather than
+ * priced off a shelf, so the honest offer is a free, no-obligation estimate.
  */
 
 const STORE = "cca.offer.v1";
@@ -30,12 +27,8 @@ const SNOOZE_DAYS = 14;
 const DWELL_MS = 12_000;
 const SCROLL_TRIGGER = 0.4;
 
-/** Three of the ten points — the ones a homeowner recognises. */
-const HIGHLIGHTS = [
-  "Capacitor readings taken and recorded",
-  "Condenser and evaporator coils cleaned",
-  "Drain line flushed and treated",
-];
+/** Three of the four estimate points — the ones that answer "what's the catch?". */
+const HIGHLIGHTS = estimate.points.slice(0, 3);
 
 function snoozed(): boolean {
   try {
@@ -197,18 +190,18 @@ export function OfferPopup() {
         <div className="relative px-6 pb-7 pt-9 sm:px-9 sm:pb-9 sm:pt-10 lg:pr-32">
           <p className="flex items-center gap-3">
             <span className="rounded-full bg-gradient-to-b from-gold to-orange px-3 py-1.5 font-display text-[0.6rem] font-extrabold uppercase tracking-[0.18em] text-navy shadow-[0_8px_20px_-6px_rgb(255_176_32/0.8)]">
-              Pre-season service
+              {estimate.eyebrow}
             </span>
             <span className="h-px flex-1 bg-white/20" aria-hidden="true" />
           </p>
 
           <div className="mt-5 flex items-end gap-5">
-            <p className="poster text-[clamp(3.6rem,16vw,5.5rem)] leading-[0.8] text-white drop-shadow-[0_8px_28px_rgb(255_176_32/0.35)]">
-              {cleanAndTune.price}
+            <p className="poster text-[clamp(3.6rem,16vw,5.5rem)] leading-[0.8] text-bullion drop-shadow-[0_8px_28px_rgb(255_176_32/0.35)]">
+              Free
             </p>
             <p className="pb-2 font-mono text-[0.65rem] uppercase leading-relaxed tracking-[0.14em] text-cyan">
-              {cleanAndTune.unit}
-              <span className="mt-0.5 block text-white/45">10-point service</span>
+              estimate
+              <span className="mt-0.5 block text-white/45">no obligation</span>
             </p>
           </div>
 
@@ -216,12 +209,10 @@ export function OfferPopup() {
             id="offer-title"
             className="mt-4 max-w-sm font-display text-[1.35rem] font-extrabold leading-[1.15] tracking-[-0.025em] sm:text-[1.6rem]"
           >
-            The {cleanAndTune.name}, booked before the season turns.
+            A free estimate on your roof, remodel or AC.
           </h2>
           <p className="mt-3 max-w-md text-[0.92rem] leading-relaxed text-white/72">
-            Most summer breakdowns start as something a spring service would
-            have caught. You get the readings in writing and no obligation to
-            do anything with them.
+            {estimate.summary}
           </p>
 
           <ul className="mt-5 grid gap-2">
@@ -235,14 +226,14 @@ export function OfferPopup() {
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a
-              href="#clean-and-tune"
+              href="/contact"
               onClick={() => {
                 track("quote-open", "Offer popup");
                 close();
               }}
               className="inline-flex h-[3.25rem] flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-b from-orange-light to-ember px-5 font-display text-[0.92rem] font-extrabold text-white shadow-[var(--shadow-orange)] ring-1 ring-inset ring-white/25 transition-transform hover:-translate-y-0.5"
             >
-              Book the {cleanAndTune.price} Clean &amp; Tune
+              Request a free estimate
             </a>
             <a
               href={business.phoneHref}
@@ -258,7 +249,7 @@ export function OfferPopup() {
           </div>
 
           <p className="mt-4 font-mono text-[0.58rem] uppercase tracking-[0.13em] text-white/40">
-            Lic. {business.license} · No obligation · {business.emergency}
+            Licensed &amp; insured · No obligation · {business.emergency}
           </p>
         </div>
 

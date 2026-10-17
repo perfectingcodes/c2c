@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { ArrowRight, Check, Phone } from "lucide-react";
-import { business, cleanAndTune, locations, region, services } from "@/content/site";
+import { business, locations, region, services } from "@/content/site";
 import { SiteLayout } from "@/components/layout/site-layout";
 import { AnswerBlock } from "@/components/answer";
 import { Reveal } from "@/components/reveal";
@@ -16,9 +16,11 @@ import { cn } from "@/lib/utils";
  */
 export default function ServicesIndex() {
   const path = "/services";
-  const answer = `${business.name} provides six HVAC services across ${region}: ${services
+  const answer = `${business.name} runs three licensed divisions across ${region}: ${services
     .map((s) => s.short.toLowerCase())
-    .join(", ")}. All work is performed under Florida Mechanical Contractor licence #${business.license}, priced flat before work begins, and available 24/7 for emergencies at ${business.phone}. Routine maintenance is the ${cleanAndTune.price} ${cleanAndTune.name}, a 10-point service.`;
+    .join(", ")}. Each is governed by its own Florida licence — ${business.licenses
+    .map((l) => l.number)
+    .join(", ")} — priced flat before work begins, and available 24/7 for emergencies at ${business.phone}. Roofing and contracting start with a free estimate; HVAC adds the $89 Clean & Tune, a 10-point service.`;
 
   const crumbs = [
     { name: "Home", path: "/" },
@@ -28,8 +30,8 @@ export default function ServicesIndex() {
   return (
     <>
       <Seo
-        title={`HVAC Services in ${region} | ${business.name}`}
-        description={`Heating, cooling, mechanical, repairs, commercial HVAC and indoor air quality across ${region}. Licensed #${business.license}, flat-rate pricing, 24/7 emergency service.`}
+        title={`Our Services in ${region} | ${business.name}`}
+        description={`Roofing, general contracting and HVAC across ${region} — one licensed company. Free estimates, flat-rate pricing, 24/7 emergency service.`}
         path={path}
         nodes={[
           faqNode(
@@ -46,7 +48,7 @@ export default function ServicesIndex() {
       <SiteLayout
         eyebrow="Services"
         title="Everything we do, in plain terms"
-        lead="Six services, one crew. Pick what you need, or call and describe the problem — we will tell you which one it is."
+        lead="Three divisions, one licensed company. Pick what you need, or call and describe the project — we will tell you which trade it is."
         crumbs={crumbs}
       >
         <section className="shell py-14 md:py-18">

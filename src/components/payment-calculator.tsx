@@ -79,9 +79,9 @@ export function PaymentCalculator({ className }: { className?: string }) {
             What would it cost per month?
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-navy/65">
-            Move the sliders to see how a replacement could be structured.
-            Everything is adjustable, including the rate — your actual terms
-            come from the lender.
+            Move the sliders to see how a roof, a remodel or a system
+            replacement could be structured. Everything is adjustable, including
+            the rate — your actual terms come from the lender.
           </p>
 
           <div className="mt-7 space-y-6">
@@ -90,11 +90,11 @@ export function PaymentCalculator({ className }: { className?: string }) {
               label="Project cost"
               value={money(amount)}
               min={3000}
-              max={30000}
+              max={45000}
               step={250}
               current={amount}
               onChange={setAmount}
-              hint="A full system replacement in this market typically lands between $6,000 and $15,000 depending on tonnage, ductwork and efficiency."
+              hint="A re-roof or a full system replacement in this market typically lands between $8,000 and $30,000 depending on size, materials and scope."
             />
             <Field
               id={downId}

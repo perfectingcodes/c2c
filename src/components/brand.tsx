@@ -278,7 +278,7 @@ export function KineticWordmark({ className }: { className?: string }) {
         Coast to Coast
       </span>
       <span className="poster text-[clamp(3rem,9vw,7rem)] text-cyan/25">
-        Air
+        Contracting
       </span>
       <span
         className="size-3 shrink-0 rounded-full bg-orange/50"

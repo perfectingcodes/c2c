@@ -5,10 +5,8 @@ import {
   business,
   cleanAndTune,
   generalFaqs,
-  locations,
   services,
 } from "@/content/site";
-import { cityFaqs } from "@/content/local";
 import { cn } from "@/lib/utils";
 import { track } from "@/lib/leads";
 
@@ -44,11 +42,6 @@ function buildIndex(): Entry[] {
   for (const s of services) {
     for (const f of s.faqs) {
       out.push({ ...f, href: `/services/${s.slug}`, source: s.name });
-    }
-  }
-  for (const l of locations) {
-    for (const f of cityFaqs(l)) {
-      out.push({ ...f, href: `/locations/${l.slug}`, source: l.city });
     }
   }
 
@@ -97,9 +90,9 @@ function search(index: Entry[], query: string): Entry[] {
 }
 
 const SUGGESTED = [
-  "How much is a tune up?",
-  "Do I need a permit to replace my AC?",
-  "How often should I service my AC?",
+  "Do you charge for an estimate?",
+  "Do you work with insurance claims?",
+  "Are you licensed and insured?",
   "Do you offer financing?",
 ];
 
@@ -138,7 +131,7 @@ export function SupportBot() {
         <div
           id="ask-coast-panel"
           role="dialog"
-          aria-label="Ask Coast to Coast Air"
+          aria-label={`Ask ${business.name}`}
           className="mb-3 w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-card border border-navy/12 bg-white shadow-[0_30px_70px_-20px_rgb(5_15_38/0.55)]"
         >
           <div className="band-navy grain relative flex items-center gap-3 p-4">

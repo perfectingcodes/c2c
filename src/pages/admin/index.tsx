@@ -11,7 +11,7 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { business, cleanAndTune, counties, locations, services } from "@/content/site";
+import { business, counties, locations, services } from "@/content/site";
 import {
   channels,
   objectives,
@@ -48,21 +48,27 @@ const BLOCKERS = [
     who: "Client",
   },
   {
-    what: "No analytics or conversion tracking installed",
+    what: "No analytics or Search Console installed",
     go: "/admin/tracking",
-    why: "No visitor data is being collected. Ad spend cannot be judged until this exists.",
-    who: "Elevate + client",
+    why: "No visitor data is being collected. Organic performance — the local pack, search rankings and answer-engine citations — can't be measured until this exists.",
+    who: "Arranges + client",
   },
   {
     what: "Quote form has no destination",
     go: "/admin/leads",
     why: "VITE_QUOTE_ENDPOINT is unset, so the form falls back to a prefilled email. Requests are also written to the visitor's own browser, which the office cannot see.",
-    who: "Elevate",
+    who: "Arranges",
   },
   {
     what: "Domain and email unconfirmed",
     go: "/admin/seo",
-    why: "coasttocoastair.com and info@ come from the design comp, not from anything published.",
+    why: "coasttocoastcontracting.com and info@ are drafted for the rebrand, not yet confirmed as the live domain.",
+    who: "Client",
+  },
+  {
+    what: "Licence labels need confirming",
+    go: "/admin/seo",
+    why: "The old site shows the CRC/CCC labels swapped versus the Florida DBPR prefixes. Confirm which number belongs to roofing vs. residential before launch — a licence beside the wrong trade is a compliance issue.",
     who: "Client",
   },
   {
@@ -86,7 +92,9 @@ export default function AdminHome() {
   const peak = Math.max(...seasonality.map((s) => s.demand));
   const month = new Date().toLocaleString("en-US", { month: "short" });
   const current = seasonality.find((s) => s.month === month);
-  const pages = locations.length * services.length + locations.length + services.length + 7;
+  // Public pages: home, services index, one per division, locations, about,
+  // financing, contact, privacy, terms.
+  const pages = services.length + 8;
 
   return (
     <AdminShell
@@ -106,11 +114,11 @@ export default function AdminHome() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <FeatureCard
           className="lg:col-span-5"
-          eyebrow="Start here"
-          title="Claim the Google Business Profile"
-          body="The highest-return item on the list and the one everything else depends on — the local pack, the review link, the map. Nothing downstream works until it is claimed."
-          action="Open the Google page"
-          href="/admin/google"
+          eyebrow="Launching today"
+          title="Ship it — the go-live plan"
+          body="The build is done and verified. The week's schedule takes it live today and fully instrumented by Friday: deploy, Search Console, analytics, lead routing and the Business Profile — every item dated and owned."
+          action="Open the launch plan"
+          href="/admin/launch"
         />
 
         <div className="grid grid-cols-2 gap-5 lg:col-span-7">
@@ -148,7 +156,7 @@ export default function AdminHome() {
         <Panel
           className="lg:col-span-7"
           title="Blocking the whole plan"
-          subtitle="None of the paid or measurement work can begin until these are resolved. They all need the client, not us."
+          subtitle="None of the launch or measurement work can begin until these are resolved. They all need the client, not us."
         >
           <ul className="space-y-2">
             {BLOCKERS.map((b, i) => (
@@ -341,8 +349,8 @@ export default function AdminHome() {
           { href: "/admin/leads", label: "Leads & CRM", body: "Enquiries and traction", Icon: Users },
           { href: "/admin/resources", label: "Resources", body: "Review sequence", Icon: Star },
           { href: "/admin/seo", label: "SEO & GEO", body: "Measured site audit", Icon: Gauge },
-          { href: "/admin/campaigns", label: "Campaigns", body: `${cleanAndTune.price} offer`, Icon: Megaphone },
-          { href: "/admin/google", label: "Google", body: "Profile and Ads", Icon: Globe },
+          { href: "/admin/marketing", label: "Marketing plan", body: "Channels and seasonality", Icon: Target },
+          { href: "/admin/google", label: "Google", body: "Business Profile", Icon: Globe },
         ].map(({ href, label, body, Icon }) => (
           <Link
             key={href}

@@ -10,7 +10,7 @@ export default function NotFound() {
     <>
       <Seo
         title={`Page not found | ${business.name}`}
-        description={`That page does not exist. Browse HVAC services and service areas across Southwest Florida, or call ${business.phone}.`}
+        description={`That page does not exist. Browse our roofing, contracting and HVAC services across Southwest Florida, or call ${business.phone}.`}
         path="/404"
         noindex
       />
