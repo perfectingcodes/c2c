@@ -24,13 +24,13 @@ import { cn } from "@/lib/utils";
 const APR = 9.99;
 const TERMS = [60, 84, 120] as const;
 const MIN = 4000;
-const MAX = 18000;
-const STEP = 500;
+const MAX = 40000;
+const STEP = 1000;
 /** Where the scale is marked. Real numbers, not decoration. */
-const TICKS = [4000, 8000, 12000, 18000];
+const TICKS = [5000, 15000, 25000, 40000];
 
 export function PaymentTeaser({ className }: { className?: string }) {
-  const [amount, setAmount] = useState(9000);
+  const [amount, setAmount] = useState(15000);
   const [term, setTerm] = useState<number>(120);
   const id = useId();
 
@@ -54,13 +54,13 @@ export function PaymentTeaser({ className }: { className?: string }) {
         <div className="flex flex-col">
           <SectionEyebrow index={2}>Financing</SectionEyebrow>
           <h2 className="poster mt-4 text-[clamp(1.7rem,3.2vw,2.35rem)]">
-            A new system,
+            A big project,
             <span className="block text-ember">by the month.</span>
           </h2>
           <p className="mt-4 max-w-md leading-relaxed text-navy/65">
-            A replacement is rarely something you planned for. Move the two
-            things that actually change the number and see where a payment
-            lands before you talk to anyone.
+            A new roof or a system replacement is rarely something you planned
+            for. Move the two things that actually change the number and see
+            where a payment lands before you talk to anyone.
           </p>
 
           <div className="mt-8">
@@ -68,7 +68,7 @@ export function PaymentTeaser({ className }: { className?: string }) {
               htmlFor={id}
               className="flex items-baseline justify-between gap-4 font-display text-[0.62rem] font-extrabold uppercase tracking-[0.2em] text-navy/45"
             >
-              System cost
+              Project cost
               <span className="poster text-xl tracking-normal text-navy">
                 {money(amount)}
               </span>

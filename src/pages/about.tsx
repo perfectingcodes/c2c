@@ -10,7 +10,7 @@ export default function About() {
     <>
       <Seo
         title={`About ${business.formalName} | Locally Owned in ${region}`}
-        description={`${business.formalName} is a licensed, insured and locally owned HVAC contractor serving ${region} out of ${business.city} — flat-rate pricing on every job.`}
+        description={`${business.formalName} is a licensed, insured, locally owned contractor serving ${region} out of ${business.city} — roofing, general contracting and HVAC, with flat-rate pricing on every job.`}
         path="/about"
         nodes={[
           breadcrumbNode("/about", [
@@ -37,21 +37,26 @@ export default function About() {
               <div className="mt-5 space-y-4 text-lg text-navy/75 leading-relaxed">
                 <p>
                   We started because of how often we were called in for a second
-                  opinion and found a system that did not need replacing. A
-                  capacitor, a clogged drain line, a duct that came loose in the
-                  attic — a few hundred dollars instead of a few thousand.
+                  opinion and found a problem that did not need the fix someone
+                  else had quoted. A roof that needed a repair, not a tear-off. A
+                  system that needed a capacitor, not a replacement — hundreds
+                  instead of thousands.
                 </p>
                 <p>
-                  That is still how we operate. We diagnose the actual fault, price
-                  the repair in writing, and recommend replacement only when the
-                  math genuinely favors it. If your system has years left, we would
-                  rather earn the maintenance work than sell you a box.
+                  That is still how we operate across all three trades. We
+                  inspect the actual problem, put the scope and price in writing,
+                  and recommend the bigger job only when the math genuinely
+                  favors it. If what you have has years left, we would rather earn
+                  the smaller work honestly than sell you the big one.
                 </p>
                 <p>
-                  {region} is hard on equipment. Salt air eats condenser coils,
-                  summer humidity finds every gap in the ductwork, and a house that
-                  sits empty in August is its own problem. Working here every day is
-                  what lets us plan for that instead of reacting to it.
+                  {region} is hard on buildings. Hurricane-season wind and sun
+                  punish roofs, salt air eats outdoor equipment, and a house that
+                  sits empty through storm season is its own problem. Working here
+                  every day is what lets us plan for that instead of reacting to
+                  it — and holding the roofing, contracting and mechanical
+                  licences means one company can see the whole building, not just
+                  one piece of it.
                 </p>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import { ArrowRight, Check, Phone } from "lucide-react";
-import { business, cleanAndTune, financing, region } from "@/content/site";
+import { business, estimate, financing, region } from "@/content/site";
 import { SiteLayout } from "@/components/layout/site-layout";
 import { Section } from "@/components/section";
 import { Reveal } from "@/components/reveal";
@@ -12,8 +12,8 @@ export default function Financing() {
   return (
     <>
       <Seo
-        title={`HVAC Financing in ${region} | ${business.name}`}
-        description={`Financing options on approved credit for AC replacement and larger repairs across ${region}. Same-day decisions in most cases — call ${business.phone}.`}
+        title={`Financing in ${region} | ${business.name}`}
+        description={`Financing options on approved credit for roofing, remodels and system replacement across ${region}. Same-day decisions in most cases — call ${business.phone}.`}
         path="/financing"
         nodes={[
           breadcrumbNode("/financing", [
@@ -25,7 +25,7 @@ export default function Financing() {
 
       <SiteLayout
         eyebrow="Financing"
-        title="A new system shouldn't mean an impossible week"
+        title="A big project shouldn't mean an impossible week"
         lead={financing.intro}
         crumbs={[
           { name: "Home", path: "/" },
@@ -59,25 +59,25 @@ export default function Financing() {
             <div className="p-8 md:p-10">
               <p className="eyebrow">Before you finance anything</p>
               <h2 className="mt-3 text-2xl md:text-3xl">
-                Make sure you actually need a new system
+                Make sure you actually need the big job
               </h2>
               <div className="mt-5 space-y-4 leading-relaxed text-navy/75">
                 <p>
-                  Plenty of systems we are called out to replace do not need
-                  replacing. A failed capacitor, a clogged condensate line or a
-                  duct that came loose in the attic can present exactly like a
-                  dying system, and costs a fraction of one to fix.
+                  Plenty of what we are called out to replace does not need
+                  replacing. A roof leak that is a repair, not a tear-off; a
+                  system that needs a capacitor, not a condenser. Each can look
+                  like the expensive job and cost a fraction of one to fix.
                 </p>
                 <p>
-                  We diagnose the actual fault first and put the repair price in
-                  writing. If replacement genuinely is the better math — and after
-                  10–15 years in this climate it often is — then we will talk about
-                  financing, not before.
+                  We inspect the actual problem first and put the price in
+                  writing. If the bigger job genuinely is the better math — and
+                  on an aging roof or a 10–15 year old system it often is — then
+                  we talk about financing, not before.
                 </p>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <ButtonLink href="/contact">
-                  Request a quote
+                  Get a free estimate
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </ButtonLink>
                 <ButtonLink href={business.phoneHref} variant="ghost">
@@ -91,19 +91,14 @@ export default function Financing() {
               <p className="font-display text-[0.7rem] font-bold uppercase tracking-[0.22em] text-cyan">
                 Start here instead
               </p>
-              <p className="mt-4 flex items-baseline gap-2">
-                <span className="display text-5xl text-white">{cleanAndTune.price}</span>
-                <span className="text-sm font-semibold text-white/60">
-                  {cleanAndTune.unit}
-                </span>
-              </p>
-              <h2 className="mt-3 text-2xl text-white">{cleanAndTune.name}</h2>
+              <p className="poster text-bullion mt-4 text-5xl">Free</p>
+              <h2 className="mt-3 text-2xl text-white">{estimate.name}</h2>
               <p className="mt-4 leading-relaxed text-white/70">
-                A 10-point service that often finds the real problem for the price
-                of a maintenance visit.
+                An inspection and a written scope that tell you what the project
+                actually needs — before anyone talks about financing it.
               </p>
               <div className="mt-7">
-                <ButtonLink href="/contact">Book a visit</ButtonLink>
+                <ButtonLink href="/contact">Request an estimate</ButtonLink>
               </div>
             </div>
           </div>
@@ -117,8 +112,8 @@ export default function Financing() {
 
         <CtaBand
           eyebrow="Not sure where to start?"
-          title="Let's find out what your system actually needs."
-          cta="Book a diagnostic"
+          title="Let's find out what your project actually needs."
+          cta="Get a free estimate"
         />
       </SiteLayout>
     </>

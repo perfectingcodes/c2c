@@ -93,7 +93,7 @@ export const EVENT_LABELS: Record<EventKind, string> = {
   "quote-submit": "Sent a quote request",
   financing: "Used the financing estimator",
   chat: "Opened the chat",
-  offer: "Saw the $89 offer popup",
+  offer: "Saw the free-estimate popup",
 };
 
 export interface SiteEvent {

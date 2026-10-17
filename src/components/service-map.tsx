@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import { ArrowUpRight, MapPin, Phone } from "lucide-react";
 import { business, countyList, locations, type Location } from "@/content/site";
 import { saltNote } from "@/content/local";
@@ -183,10 +182,12 @@ export function ServiceMap() {
         <ul className="mt-6 flex flex-wrap gap-3">
           {focusCities.map((l) => (
             <li key={l.slug}>
-              <Link
-                href={`/locations/${l.slug}`}
+              <button
+                type="button"
+                onClick={() => setActiveSlug(l.slug)}
                 onMouseEnter={() => setActiveSlug(l.slug)}
                 onFocus={() => setActiveSlug(l.slug)}
+                aria-pressed={l.slug === activeSlug}
                 className="group flex items-center gap-2.5 rounded-full bg-white/10 px-4 py-2.5 ring-1 ring-orange/50 transition-colors hover:bg-white/16"
               >
                 <MapPin className="size-4 text-orange" aria-hidden="true" />
@@ -197,7 +198,7 @@ export function ServiceMap() {
                   className="size-3.5 text-white/50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   aria-hidden="true"
                 />
-              </Link>
+              </button>
             </li>
           ))}
         </ul>
@@ -555,8 +556,8 @@ export function ServiceMap() {
               </dl>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <ButtonLink href={`/locations/${active.slug}`}>
-                  {active.city} services
+                <ButtonLink href="/contact">
+                  Get a free estimate
                   <ArrowUpRight className="size-4" aria-hidden="true" />
                 </ButtonLink>
                 <ButtonLink href={business.phoneHref} variant="outline">
@@ -566,20 +567,19 @@ export function ServiceMap() {
               </div>
             </div>
 
-            {/* Real links, not buttons: hovering previews the city on the map,
-                clicking goes to its page — so every city stays crawlable from
-                the home page and reachable without a pointer. */}
+            {/* Tap a city to preview it on the map above. */}
             <p className="mt-6 font-display text-[0.6rem] font-extrabold uppercase tracking-[0.2em] text-white/55">
               Every city we cover
             </p>
             <ul className="mt-3 flex flex-wrap gap-2">
               {locations.map((l) => (
                 <li key={l.slug}>
-                  <Link
-                    href={`/locations/${l.slug}`}
+                  <button
+                    type="button"
+                    onClick={() => setActiveSlug(l.slug)}
                     onMouseEnter={() => setActiveSlug(l.slug)}
                     onFocus={() => setActiveSlug(l.slug)}
-                    aria-current={l.slug === activeSlug ? "true" : undefined}
+                    aria-pressed={l.slug === activeSlug}
                     className={cn(
                       "flex min-h-9 items-center rounded-full px-3.5 py-2 font-display text-xs font-extrabold transition-colors",
                       l.slug === activeSlug
@@ -590,7 +590,7 @@ export function ServiceMap() {
                     )}
                   >
                     {l.city}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>

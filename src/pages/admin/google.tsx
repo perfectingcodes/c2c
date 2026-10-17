@@ -1,15 +1,12 @@
-import { business, googleReviews, hasReviewData, locations } from "@/content/site";
-import { campaigns } from "@/content/marketing";
+import { business, googleReviews, hasReviewData, locations, services } from "@/content/site";
 import { AdminShell } from "@/components/admin/shell";
-import { NotConnected, Panel, StatCard, StatusPill, Table, Td } from "@/components/admin/ui";
+import { NotConnected, Panel, StatCard, StatusPill } from "@/components/admin/ui";
 
 export default function AdminGoogle() {
-  const googleCampaigns = campaigns.filter((c) => c.platform.startsWith("Google"));
-
   return (
     <AdminShell
       title="Google"
-      lead="Business Profile, Ads, Local Services and Search Console. For a local contractor the Business Profile matters more than everything else here combined."
+      lead="Business Profile and Search Console — the organic Google surface, with no ad spend. For a local contractor the Business Profile matters more than everything else here combined."
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard label="Profile status" value="Unclaimed" tone="bad" hint="Highest priority" />
@@ -24,7 +21,7 @@ export default function AdminGoogle() {
 
       <Panel
         title="Google Business Profile"
-        subtitle="The single highest-ROI asset in local search. Posts, photos and Q&A all feed local pack ranking."
+        subtitle="The heart of an organic plan and the single highest-ROI asset in local search. Posts, photos and Q&A all feed the local pack ranking — and it is free."
         action={<StatusPill status="blocked" />}
       >
         <NotConnected
@@ -34,10 +31,33 @@ export default function AdminGoogle() {
             `Claim the profile for ${business.street}, ${business.city}, ${business.state} ${business.zip}`,
             "Complete postcard or phone verification",
             `Set the service areas to exactly the ${locations.length} cities the site covers`,
-            "Add the licence number, hours and the 24/7 emergency attribute",
-            "Upload the logo, van and job photos",
+            "Set a primary category and add one for each additional division; list all four divisions as services",
+            "Add the licence numbers, hours and the 24/7 emergency attribute",
+            "Upload the logo, van and roofing, remodel, AC and commercial job photos",
           ]}
         />
+
+        <div className="mt-5 rounded-lg bg-navy/[0.035] p-4">
+          <p className="text-xs font-semibold text-navy">Managing it, week to week</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-navy/60">
+            A claimed profile is the start, not the finish. The ongoing work is
+            what actually moves the local pack — and it is all time, not spend.
+          </p>
+          <ul className="mt-3 space-y-2 text-sm text-navy/75">
+            {[
+              `Categories: one primary, plus an additional category per division — roofing, general contractor, HVAC and commercial (${services.length} divisions, three licences)`,
+              "A weekly post: an offer, a finished job photo or a seasonal tip, each tied to the month's content",
+              "Fresh photos regularly — before-and-afters read as a working company, a stale gallery reads as a dead listing",
+              "Answer every Q&A, and seed the ones customers actually ask",
+              "Respond to every review within 48 hours, positive or not",
+            ].map((t) => (
+              <li key={t} className="flex gap-2.5">
+                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-navy/35" aria-hidden="true" />
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="mt-5 rounded-lg border border-navy/10 p-4">
           <p className="font-display text-sm font-bold text-navy">
@@ -53,7 +73,7 @@ export default function AdminGoogle() {
               ["Name", business.name],
               ["Address", `${business.street}, ${business.city}, ${business.state} ${business.zip}`],
               ["Phone", business.phone],
-              ["Licence", business.license],
+              ["Licences", business.licenses.map((l) => l.number).join(", ")],
             ].map(([k, v]) => (
               <div key={k} className="flex gap-3">
                 <dt className="w-20 shrink-0 text-xs text-navy/50">{k}</dt>
@@ -101,33 +121,6 @@ export default function AdminGoogle() {
             </li>
           ))}
         </ul>
-      </Panel>
-
-      <Panel title="Google Ads & Local Services" action={<StatusPill status="not-connected" />}>
-        <NotConnected
-          service="Google Ads"
-          what="No ad account is linked, so there is no spend, impression or conversion data. Local Services Ads additionally require licence and insurance verification, which takes time — start that early."
-          steps={[
-            `Apply for Local Services Ads and verify licence ${business.license}`,
-            "Create the Ads account and link it to Search Console and Analytics",
-            "Install conversion tracking before the first dollar is spent",
-            "Launch the emergency campaign first; it has the clearest intent",
-          ]}
-        />
-        <div className="mt-5">
-          <Table columns={["Campaign", "Status", "Budget", "KPI"]}>
-            {googleCampaigns.map((c) => (
-              <tr key={c.name}>
-                <Td className="font-medium text-navy">{c.name}</Td>
-                <Td>
-                  <StatusPill status={c.status} />
-                </Td>
-                <Td muted>{c.budget}</Td>
-                <Td muted>{c.kpi}</Td>
-              </tr>
-            ))}
-          </Table>
-        </div>
       </Panel>
 
       <Panel title="Search Console" action={<StatusPill status="not-connected" />}>

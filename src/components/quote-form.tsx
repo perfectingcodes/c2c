@@ -121,7 +121,7 @@ export function QuoteForm({
             id="message"
             name="message"
             rows={4}
-            placeholder="What is the system doing? When did it start?"
+            placeholder="What's the project? (roof, remodel, AC…) When did it start?"
             className="mt-1.5 w-full rounded-2xl border border-navy/15 bg-white px-4 py-3 text-sm outline-none transition-colors placeholder:text-navy/40 focus:border-blue"
           />
         </div>

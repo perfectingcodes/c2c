@@ -3,18 +3,17 @@ import { Link } from "wouter";
 import {
   ArrowRight,
   ArrowUpRight,
-  CalendarCheck,
   Check,
   Phone,
+  ShieldCheck,
   Sparkles,
   Star,
   Zap,
 } from "lucide-react";
 import {
-  bestServiceMonths,
   business,
-  cleanAndTune,
   countyList,
+  estimate,
   generalFaqs,
   googleReviews,
   locations,
@@ -31,13 +30,10 @@ import { PaymentTeaser } from "@/components/payment-teaser";
 import { GoogleBadge, GoogleSeal } from "@/components/google-reviews";
 import {
   ArrowLink,
-  CityMarquee,
   Pill,
   SectionEyebrow,
   TrustStrip,
 } from "@/components/brand";
-import { SeasonScrubber } from "@/components/season-scrubber";
-import { SystemAgeCard } from "@/components/system-age";
 import { ServiceMap } from "@/components/service-map";
 import { CtaBand } from "@/components/cta-band";
 import { OfferPopup } from "@/components/offer-popup";
@@ -69,8 +65,8 @@ export default function Home() {
   return (
     <div className="flex min-h-dvh flex-col">
       <Seo
-        title={`HVAC in Southwest Florida | ${business.name}`}
-        description={`Licensed HVAC across ${business.city}, Naples, Cape Coral and all of Southwest Florida. Repair, replacement, ${cleanAndTune.price} Clean & Tune, 24/7 emergency. Call ${business.phone}.`}
+        title={`Roofing, Contracting & HVAC in Southwest Florida | ${business.name}`}
+        description={`One licensed company for roofing, general contracting and HVAC across ${business.city}, Naples, Cape Coral and all of Southwest Florida. Free estimates, flat-rate pricing, 24/7 emergency. Call ${business.phone}.`}
         path="/"
         nodes={[
           faqNode("/", generalFaqs),
@@ -82,8 +78,8 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <TrustStrip />
-        <ServicesSection />
-        <CleanAndTuneSection />
+        <DivisionsSection />
+        <EstimateSection />
         <FinancingSection />
         <WhyUsSection />
         <TestimonialsSection />
@@ -106,68 +102,83 @@ export default function Home() {
 
 /**
  * Hero proof points. Every line is a promise the rest of the site already
- * makes — same-day booking, a written price before work starts, and the
- * published Clean & Tune rate — so the strip reads as the start of the job,
- * not as a list of statistics.
+ * makes — a free estimate, three licensed trades — so the strip reads as the
+ * start of the job, not as a list of statistics.
  */
 const HERO_PROOF = [
-  { v: "Same-day", k: "Appointments" },
-  { v: cleanAndTune.price, k: "Clean & Tune" },
+  { v: "Free", k: "Estimates" },
+  { v: `${services.length}`, k: "Divisions" },
 ] as const;
 
 function Hero() {
   return (
-    <section className="band-azure grain grid-lines relative isolate overflow-hidden">
-      {/* Only where the copy sits: the same teal, deeper, so white body copy
-          clears AA without the band losing its brightness anywhere else. */}
+    <section className="grain grid-lines relative isolate overflow-hidden text-white">
+      {/* Sunset-into-night ground, taken off the new badge: a navy sky falling
+          to teal water, with the sun's warmth as a glow behind the logo rather
+          than a wash over the band. Deliberately unlike the Air site's bright
+          teal hero. */}
+      <div
+        className="absolute inset-0 -z-20"
+        aria-hidden="true"
+        style={{
+          background:
+            "linear-gradient(176deg,#061634 0%,#0a2352 38%,#0c5676 74%,#0b7ba4 100%)",
+        }}
+      />
+      {/* The sun on the horizon, behind the badge. */}
+      <div
+        className="pointer-events-none absolute left-[72%] top-[42%] -z-10 h-72 w-[40rem] max-w-[92vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(55% 55% at 50% 50%, rgb(255 176 32 / 0.5), rgb(255 106 19 / 0.22) 45%, transparent 72%)",
+        }}
+      />
+      {/* Deeper scrim under the copy so white type holds AA on the brighter
+          lower band. */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(104deg, rgb(6 86 122 / 0.78) 0%, rgb(7 102 142 / 0.5) 34%, transparent 62%)",
+            "linear-gradient(100deg, rgb(5 16 40 / 0.8) 0%, rgb(7 26 61 / 0.5) 42%, transparent 68%)",
         }}
       />
 
-      <div className="shell relative grid grid-cols-1 items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.98fr)] lg:items-start lg:gap-8 lg:pb-10 lg:pt-20">
+      <div className="shell relative grid grid-cols-1 items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.98fr)] lg:items-center lg:gap-8 lg:pb-10 lg:pt-20">
         <span
           className="pointer-events-none absolute inset-y-24 left-[calc(50%-0.75rem)] hidden w-px bg-gradient-to-b from-transparent via-white/18 to-transparent lg:block"
           aria-hidden="true"
         />
         <div className="max-w-xl">
-          {/* The divider only appears once both halves are on one line —
-              wrapped, it left a pipe hanging off the end of the first line. */}
           <p className="font-display text-[0.68rem] font-extrabold uppercase tracking-[0.24em] text-white">
-            Southwest Florida HVAC
-            <span className="mx-3 hidden h-3 w-px align-middle sm:inline-block sm:bg-cyan/70" aria-hidden="true" />
-            <span className="block text-orange-light sm:inline">Lic. {business.license}</span>
+            Southwest Florida Contractor
+            <span className="mx-3 hidden h-3 w-px align-middle sm:inline-block sm:bg-orange/70" aria-hidden="true" />
+            <span className="mt-1 block text-orange-light sm:mt-0 sm:inline">
+              Roofing · HVAC · Construction · Commercial
+            </span>
           </p>
           <div className="thermal-rule mt-5 w-20" aria-hidden="true" />
 
-          {/* The break was after "Comfort", which left a short line over a
-              long one and split the subject from its verb. Long over short
-              rags better, and it drops the accent word onto its own line
-              where it can carry the weight. */}
-          <h1 className="poster mt-5 text-[clamp(2.7rem,5vw,4.2rem)] leading-[0.88] text-white drop-shadow-[0_4px_18px_rgb(3_18_48/0.45)]">
-            Comfort lives
+          <h1 className="poster mt-5 text-[clamp(2.6rem,5vw,4.1rem)] leading-[0.9] text-white drop-shadow-[0_4px_18px_rgb(3_18_48/0.45)]">
+            One company.
             <span className="mt-1 block">
-              <span className="text-pop">here</span>
-              <span className="text-cyan">.</span>
+              <span className="text-pop">Every trade.</span>
             </span>
           </h1>
 
           <p className="mt-5 max-w-lg text-[1.05rem] leading-relaxed text-white/90">
-            Home AC repair, replacement and maintenance across {countyList}{" "}
-            counties. A{" "}
+            Roofing, construction, HVAC and commercial service across{" "}
+            {countyList} counties — one licensed company, with a{" "}
             <span className="font-semibold text-white">
               flat price in writing before we start
             </span>{" "}
-            — and a real person answers, day or night.
+            and a real person answering, day or night.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             <ButtonLink href="/contact" variant="primary" size="lg">
-              Book Service Today
+              Get a Free Estimate
               <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
 
@@ -196,9 +207,6 @@ function Hero() {
             </a>
           </div>
 
-          {/* What a homeowner actually wants to know before they call: how
-              fast, what it costs, and who they are dealing with. Counting
-              cities and counties is a map fact, not a reason to book. */}
           <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-4 border-t border-white/25 pt-5 sm:gap-x-6">
             <img
               src="/brand/badge-locally-owned.webp"
@@ -207,11 +215,6 @@ function Hero() {
               height={632}
               className="size-14 shrink-0 drop-shadow-[0_8px_18px_rgb(3_18_48/0.5)] sm:size-[4.25rem]"
             />
-            {/* Stacked on a phone, one divided line from `sm` up — three
-                poster numerals side by side do not survive a 375px column. */}
-            {/* `contents` lets the terms and definitions become cells of the
-                phone grid, so the labels line up in a column instead of
-                starting wherever the value above them happened to end. */}
             <dl className="grid min-w-0 flex-1 grid-cols-[max-content_1fr] items-baseline gap-x-3 gap-y-2 sm:flex sm:flex-none sm:flex-wrap sm:items-center sm:gap-x-5">
               {HERO_PROOF.map((p, i) => (
                 <div key={p.k} className="contents sm:flex sm:items-center sm:gap-5">
@@ -230,85 +233,94 @@ function Hero() {
               ))}
             </dl>
 
-            {/* Social proof as a mark rather than a pill, standing in the row
-                of proof beside the locally-owned seal. */}
             <span className="hidden h-9 w-px bg-white/30 xl:block" aria-hidden="true" />
             <GoogleSeal className="basis-full sm:basis-auto" />
           </div>
-
         </div>
 
         <div className="relative">
-          {/* Two readings a homeowner can act on, above the artwork so they
-              are part of the first screen rather than something found by
-              scrolling: what the season is doing to every system in the
-              region, and where theirs sits against how long one lasts here. */}
-          <SeasonScrubber className="relative z-10 mb-3 sm:mb-0 sm:w-[76%]" />
-
-          <div className="rays-burst relative sm:-mt-4 lg:-mt-8">
-          {/* Warm core the rays radiate from, sitting under the artwork. */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange/35 blur-[80px]"
-            aria-hidden="true"
-          />
-          <img
-            src="/brand/hero-map-mascot.webp"
-            srcSet="/brand/hero-map-mascot-sm.webp 600w, /brand/hero-map-mascot.webp 1200w"
-            sizes="(min-width: 1024px) 560px, 92vw"
-            alt="Coast to Coast Air covers Florida coast to coast from Fort Myers, with focus markets in Naples, Estero and Bonita Springs"
-            width={1200}
-            height={1026}
-            fetchPriority="high"
-            className="mx-auto w-full max-w-md drop-shadow-[0_28px_56px_rgb(3_18_48/0.55)] xl:max-w-lg"
-          />
-
+          {/* The badge is the hero's art now, not the husky map — a sunset
+              medallion ringed in its own glow. */}
+          <div className="rays-burst relative mx-auto max-w-md">
+            <div
+              className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-[24rem] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange/40 blur-[70px]"
+              aria-hidden="true"
+            />
+            <img
+              src="/brand/logo-contracting.webp"
+              alt={`${business.name} — roofing, HVAC, construction and commercial`}
+              width={1024}
+              height={906}
+              fetchPriority="high"
+              className="relative mx-auto w-full max-w-[20rem] drop-shadow-[0_30px_64px_rgb(3_14_34/0.72)] sm:max-w-sm"
+            />
           </div>
 
-          {/* The second reading sits under the graphic rather than stacked on
-              top of it, so the artwork has a card at each end. */}
-          <SystemAgeCard className="relative z-10 mt-3 sm:ml-auto sm:mt-0 sm:w-[58%] lg:-mt-4" />
+          {/* One company, three licences — a compact instrument under the mark. */}
+          <div className="glass edge-lit relative z-10 mx-auto mt-4 max-w-sm p-4 sm:p-5 lg:-mt-2">
+            <p className="flex items-center gap-2 font-display text-[0.6rem] font-extrabold uppercase tracking-[0.2em] text-white/60">
+              <ShieldCheck className="size-3.5 text-cyan" aria-hidden="true" />
+              One company · three licences
+            </p>
+            <ul className="mt-3.5 grid gap-2.5 border-t border-white/12 pt-3.5 sm:grid-cols-3">
+              {business.licenses.map((l) => (
+                <li key={l.number} className="min-w-0">
+                  <span className="block font-display text-[0.7rem] font-extrabold text-white">
+                    {l.division}
+                  </span>
+                  <span className="mt-0.5 block font-mono text-[0.68rem] text-cyan">
+                    {l.number}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
-      {/* Title block. A drawing is signed along its bottom edge; this band had
-          two loose marks at opposite corners instead — the scroll cue and the
-          shop's coordinates. One rule, three entries. */}
-      <div className="shell relative hidden border-t border-white/20 pb-5 pt-4 lg:block">
-        <div className="flex items-center justify-between gap-8">
-          <span className="flex items-center gap-3" aria-hidden="true">
-            <span className="scroll-rail" />
-            <span className="font-display text-[0.55rem] font-extrabold uppercase tracking-[0.22em] text-white/55">
-              Scroll
-            </span>
-          </span>
-
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-white/45">
-            Lic. {business.license} · {business.emergency}
-          </span>
-
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-white/45">
-            {business.city}, {business.state} · {business.lat.toFixed(4)}° N{" "}
-            {Math.abs(business.lng).toFixed(4)}° W
-          </span>
-        </div>
+      {/* The four divisions, as the footing of the hero — where the Air site
+          ran a city marquee. */}
+      <div className="relative border-t border-white/15 bg-white/[0.035]">
+        <ul className="shell grid grid-cols-2 gap-x-6 gap-y-4 py-5 sm:grid-cols-4 sm:gap-x-4">
+          {services.map((s) => (
+            <li key={s.slug}>
+              <Link
+                href={`/services/${s.slug}`}
+                className="group flex items-center gap-3"
+              >
+                <span
+                  className={cn(
+                    "grid size-9 shrink-0 place-items-center rounded-lg text-white ring-1 ring-inset ring-white/25",
+                    accents[s.accent],
+                  )}
+                >
+                  <Icon name={s.icon} className="size-4" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-display text-[0.82rem] font-extrabold text-white transition-colors group-hover:text-cyan">
+                    {s.short}
+                  </span>
+                  <span className="mt-0.5 block truncate text-[0.66rem] text-white/55">
+                    {s.menuLine}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      <CityMarquee className="relative border-t border-white/25 pb-4 pt-3" />
     </section>
   );
 }
 
-/* --------------------------------------------------------------- services */
+/* -------------------------------------------------------------- divisions */
 
-function ServicesSection() {
+function DivisionsSection() {
   return (
     <section
       className="grid-lines-light relative overflow-hidden bg-white py-16 md:py-24"
       id="services"
     >
-      {/* The hero's two blooms, at light-ground strength: the section is the
-          warm end of the site meeting the cold end, which is the whole
-          business. */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute -right-40 -top-40 size-[34rem] rounded-full bg-cyan/12 blur-[130px]" />
         <div className="absolute -bottom-48 -left-40 size-[32rem] rounded-full bg-orange/10 blur-[130px]" />
@@ -317,24 +329,25 @@ function ServicesSection() {
       <div className="shell relative">
         <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-end">
           <div>
-            <SectionEyebrow index={1}>Our Services</SectionEyebrow>
+            <SectionEyebrow index={1}>What we do</SectionEyebrow>
             <h2 className="poster mt-4 text-[clamp(1.75rem,3.4vw,2.5rem)]">
-              HVAC for homes
-              <span className="block text-ember">&amp; businesses</span>
+              Four divisions,
+              <span className="block text-ember">one licensed company.</span>
             </h2>
             <div className="thermal-rule mt-5 w-24" aria-hidden="true" />
           </div>
           <p className="leading-relaxed text-navy/65 md:text-lg">
-            Six services, one crew, and a{" "}
+            Roofing, construction, HVAC and commercial service under one roof,
+            with a{" "}
             <span className="font-semibold text-navy">
               flat price in writing
             </span>{" "}
-            before anything is opened. Repairs finish the same visit whenever
-            the part is on the truck.
+            before any work begins. When a job crosses more than one trade,
+            there is still only one company accountable for it.
           </p>
         </div>
 
-        {/* Bento: one tall promise panel, then the six services. */}
+        {/* Bento: one tall promise panel, then the four divisions. */}
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           <Reveal className="lg:row-span-2">
             <div className="band-navy grain edge-lit relative flex h-full flex-col overflow-hidden rounded-card p-8">
@@ -346,15 +359,15 @@ function ServicesSection() {
                 <span className="block text-chill">before we start.</span>
               </h3>
               <p className="mt-4 leading-relaxed text-white/70">
-                A technician finds the actual fault and puts the number in
-                writing before anything is opened. It does not move because the
-                job ran long.
+                A licensed contractor inspects the work and puts the number in
+                writing before anything begins. It does not move because the job
+                ran long.
               </p>
               <ul className="mt-6 space-y-2.5">
                 {[
-                  "No diagnostic surprises",
-                  "No overtime markup",
-                  "Permits pulled on every replacement",
+                  "Free, no-obligation estimates",
+                  "No change orders without sign-off",
+                  "Permits pulled on every project",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2.5">
                     <Check className="mt-0.5 size-4 shrink-0 text-cyan" aria-hidden="true" />
@@ -362,20 +375,16 @@ function ServicesSection() {
                   </li>
                 ))}
               </ul>
-              {/* The equipment, at full strength and cropped to a band — a
-                  photograph the reader can actually see rather than a texture
-                  behind the type. Unbranded, which is the point: this is the
-                  work, not an advert. */}
               <div className="relative z-10 mt-8 overflow-hidden rounded-xl ring-1 ring-white/15">
                 <img
-                  src="/brand/photo-hvac-unit.webp"
-                  srcSet="/brand/photo-hvac-unit-760.webp 760w, /brand/photo-hvac-unit.webp 1280w"
+                  src="/brand/photo-home.webp"
+                  srcSet="/brand/photo-home-700.webp 700w, /brand/photo-home.webp 1100w"
                   sizes="(min-width: 1280px) 340px, 90vw"
-                  alt="An outdoor condenser installed beside a Southwest Florida home"
-                  width={1280}
-                  height={853}
+                  alt="A Southwest Florida home served by Coast to Coast"
+                  width={1100}
+                  height={1375}
                   loading="lazy"
-                  className="h-28 w-full object-cover object-[50%_58%] xl:h-32"
+                  className="h-28 w-full object-cover object-[50%_62%] xl:h-32"
                 />
               </div>
 
@@ -386,9 +395,6 @@ function ServicesSection() {
                 </ButtonLink>
               </div>
 
-              {/* He leans in from the corner the card has spare. Clipped by the
-                  panel edge, so he reads as part of the card rather than as a
-                  sticker dropped on it. */}
               <img
                 src="/brand/mascot-bust.webp"
                 srcSet="/brand/mascot-bust-sm.webp 400w, /brand/mascot-bust.webp 800w"
@@ -402,7 +408,7 @@ function ServicesSection() {
             </div>
           </Reveal>
 
-          {services.filter((x) => x.featured).map((s, i) => (
+          {services.map((s, i) => (
             <Reveal key={s.slug} delay={i * 0.04} className="h-full">
               <Link
                 href={`/services/${s.slug}`}
@@ -412,9 +418,6 @@ function ServicesSection() {
                   "hover:-translate-y-1 hover:border-navy hover:bg-navy hover:shadow-[var(--shadow-lift)]",
                 )}
               >
-                {/* Each card wears its own point on the hot-to-cold ramp, as a
-                    rule across the top edge. Read as a set, the four of them
-                    are the thermal rule broken into pieces. */}
                 <span
                   className={cn(
                     "absolute inset-x-0 top-0 h-[3px] origin-left scale-x-[0.35] transition-transform duration-500 group-hover:scale-x-100",
@@ -423,8 +426,6 @@ function ServicesSection() {
                   aria-hidden="true"
                 />
 
-                {/* Index numeral, drawn as an outline so it sits behind the
-                    content rather than competing with it. */}
                 <span
                   className="numeral-ghost pointer-events-none absolute right-4 top-3 select-none text-[4.25rem] transition-colors duration-300 group-hover:text-white/15 sm:text-[5rem]"
                   aria-hidden="true"
@@ -433,8 +434,6 @@ function ServicesSection() {
                 </span>
 
                 <span className="relative w-fit">
-                  {/* Glow under the chip, so the icon reads as lit rather than
-                      as a coloured square. */}
                   <span
                     className={cn(
                       "absolute inset-1 -z-10 rounded-xl opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-70",
@@ -460,9 +459,6 @@ function ServicesSection() {
                   {s.blurb}
                 </p>
 
-                {/* One real line off the service page. Generic blurbs make six
-                    cards look like one card six times; this is the part that
-                    differs. */}
                 <p className="mt-4 flex items-start gap-2.5 border-t border-navy/8 pt-4 transition-colors duration-300 group-hover:border-white/15">
                   <Check
                     className={cn(
@@ -477,7 +473,7 @@ function ServicesSection() {
                 </p>
 
                 <span className="link-arrow mt-5 text-blue transition-colors duration-300 group-hover:text-cyan">
-                  {s.short}
+                  Explore {s.short}
                   <ArrowUpRight className="size-3.5" aria-hidden="true" />
                 </span>
               </Link>
@@ -485,29 +481,15 @@ function ServicesSection() {
           ))}
         </div>
 
-        {/* The rest of the catalogue, still linked from the home page. */}
-        <div className="mt-8 flex flex-col items-start gap-3 border-t border-navy/10 pt-7 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
-          <span className="font-display text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-navy/45">
-            Also from us
-          </span>
-          {services
-            .filter((x) => !x.featured)
-            .map((x) => (
-              <Link
-                key={x.slug}
-                href={`/services/${x.slug}`}
-                className="group inline-flex min-h-9 items-center gap-2 font-display text-sm font-extrabold text-navy transition-colors hover:text-blue"
-              >
-                <span className={cn("size-2 rounded-full", accents[x.accent])} aria-hidden="true" />
-                {x.name}
-                <ArrowUpRight
-                  className="size-3.5 text-blue transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </Link>
-            ))}
-          <Link href="/services" className="link-arrow sm:ml-auto">
-            All services
+        {/* The cross-trade pitch, and a route to all four divisions. */}
+        <div className="mt-8 flex flex-col items-start gap-4 border-t border-navy/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
+          <p className="flex items-start gap-2.5 text-sm leading-relaxed text-navy/65 sm:items-center">
+            <Sparkles className="mt-0.5 size-4 shrink-0 text-ember sm:mt-0" aria-hidden="true" />
+            Storm damage across the roof, the interior and the AC? Handle it
+            with one accountable company, not three.
+          </p>
+          <Link href="/services" className="link-arrow shrink-0">
+            See all four divisions
             <ArrowUpRight className="size-3.5" aria-hidden="true" />
           </Link>
         </div>
@@ -516,33 +498,24 @@ function ServicesSection() {
   );
 }
 
-/* ----------------------------------------------------------- clean & tune */
+/* ------------------------------------------------------------- estimate */
 
 /**
- * A promotion drawn as the thing it is: a ticket.
+ * The company-wide offer, drawn as the thing it is: a ticket.
  *
  * The brand is built out of badges and plates, so the offer gets the same
  * treatment — two halves divided by a perforation, notched where the card
- * would tear, with the price struck in gold on navy. A flat panel with a
- * price on it is a price list; this is an offer.
+ * would tear. Roofing and contracting are quoted rather than priced off a
+ * shelf, so the honest promotion is a free estimate, not a coupon.
  */
-function CleanAndTuneSection() {
-  // Derived, never hard-coded, so the sash cannot drift from the prices shown.
-  const savings = (() => {
-    const num = (v?: string) => Number((v ?? "").replace(/[^0-9.]/g, ""));
-    const was = num(cleanAndTune.regularPrice);
-    const now = num(cleanAndTune.price);
-    return was > now ? `$${Math.round(was - now)}` : null;
-  })();
-
+function EstimateSection() {
   return (
     <section
-      id="clean-and-tune"
+      id="estimate"
       className="relative isolate z-10 scroll-mt-28 bg-white py-16 md:py-20"
     >
       <div className="shell">
         <div className="band-navy grain relative overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-30px_rgb(5_15_38/0.6)] ring-1 ring-white/12">
-          {/* Warm light behind the price, cool light behind the checklist. */}
           <div
             className="pointer-events-none absolute -left-32 -top-40 size-[34rem] rounded-full bg-gold/20 blur-[120px]"
             aria-hidden="true"
@@ -552,87 +525,34 @@ function CleanAndTuneSection() {
             aria-hidden="true"
           />
 
-          {savings && (
-            <>
-              {/* Phone: a compact corner flag. The long sash is 26rem wide —
-                  on a 327px card it crossed the pill, the price and the
-                  heading instead of an empty corner. */}
-              <div
-                className="pointer-events-none absolute -right-12 top-4 z-30 w-44 rotate-45 bg-gradient-to-r from-gold via-orange-light to-ember py-1.5 text-center shadow-[0_10px_22px_-8px_rgb(120_40_0/0.8)] ring-1 ring-white/30 sm:hidden"
-                aria-hidden="true"
-              >
-                <span className="font-display text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-white">
-                  Save {savings}
-                </span>
-              </div>
-              {/* Desktop: the long sash that crosses both halves. */}
-              <div
-                className="pointer-events-none absolute -right-16 top-12 z-30 hidden w-[26rem] rotate-[38deg] bg-gradient-to-r from-gold via-orange-light to-ember py-2.5 text-center shadow-[0_14px_30px_-10px_rgb(120_40_0/0.8)] ring-1 ring-white/30 sm:block"
-                aria-hidden="true"
-              >
-                <span className="font-display text-sm font-extrabold uppercase tracking-[0.2em] text-white">
-                  Save {savings}
-                </span>
-              </div>
-            </>
-          )}
-
           <div className="relative grid lg:grid-cols-[minmax(0,0.94fr)_auto_minmax(0,1.06fr)]">
             {/* ---------------------------------------------- the offer */}
             <div className="px-6 pb-10 pt-10 md:px-10 md:pb-12 md:pt-12 lg:py-14">
               <span className="pill pill-dark border-gold/40 bg-gold/12 text-gold">
                 <Sparkles className="size-3.5" aria-hidden="true" />
-                Limited-time offer
+                {estimate.eyebrow}
               </span>
 
               <div className="mt-6 flex items-end gap-3">
-                <span className="poster text-bullion text-[clamp(4rem,10vw,6.5rem)] leading-[0.78] drop-shadow-[0_10px_30px_rgb(255_140_20/0.28)]">
-                  {cleanAndTune.price}
+                <span className="poster text-bullion text-[clamp(3.5rem,9vw,5.5rem)] leading-[0.82] drop-shadow-[0_10px_30px_rgb(255_140_20/0.28)]">
+                  Free
                 </span>
                 <span className="pb-3 font-display text-sm font-bold text-white/55">
-                  {cleanAndTune.unit}
+                  no obligation
                 </span>
-                {cleanAndTune.regularPrice && (
-                  <span className="pb-3.5 font-display text-lg font-bold text-white/55 line-through decoration-ember/70 decoration-2">
-                    {cleanAndTune.regularPrice}
-                  </span>
-                )}
               </div>
 
               <h2 className="poster mt-3 text-[clamp(1.75rem,3.4vw,2.5rem)] text-white">
-                {cleanAndTune.name}
+                {estimate.name}
               </h2>
               <div className="thermal-rule mt-5 w-24" aria-hidden="true" />
               <p className="mt-5 max-w-md leading-relaxed text-white/70">
-                {cleanAndTune.summary}
+                {estimate.summary}
               </p>
-
-              {/* Which months, taken off the same seasonal table the hero
-                  reads. The shoulder months either side of the heat are the
-                  answer to "when should I book it?". */}
-              {bestServiceMonths.length === 2 && (
-                <p className="mt-5 flex items-start gap-2.5 text-sm leading-relaxed text-white/72">
-                  <CalendarCheck
-                    className="mt-0.5 size-4 shrink-0 text-cyan"
-                    aria-hidden="true"
-                  />
-                  <span>
-                    Best booked in{" "}
-                    <span className="font-semibold text-white">
-                      {bestServiceMonths[0]}
-                    </span>{" "}
-                    or{" "}
-                    <span className="font-semibold text-white">
-                      {bestServiceMonths[1]}
-                    </span>{" "}
-                    — the two months either side of the heat.
-                  </span>
-                </p>
-              )}
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <ButtonLink href="/contact" size="lg">
-                  Book a Clean &amp; Tune
+                  Request an estimate
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </ButtonLink>
                 <a
@@ -644,22 +564,22 @@ function CleanAndTuneSection() {
               </div>
 
               <p className="mt-8 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-white/48">
-                10 points · twice a year · {locations.length} cities
+                Roofing · contracting · HVAC · {locations.length} cities
               </p>
             </div>
 
             <Perforation />
 
-            {/* ------------------------------------------- the checklist */}
+            {/* ------------------------------------------- what you get */}
             <div className="px-6 pb-10 pt-9 md:px-10 md:pb-12 md:pt-10 lg:py-14 lg:pl-12">
               <p className="font-display text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-cyan">
-                Every visit · all ten points
+                What the estimate includes
               </p>
-              <ol className="mt-6 grid gap-x-8 sm:grid-cols-2">
-                {cleanAndTune.checklist.map((item, i) => (
+              <ol className="mt-6 grid gap-x-8">
+                {estimate.points.map((item, i) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 border-t border-white/10 py-3 first:border-t-0 sm:[&:nth-child(2)]:border-t-0"
+                    className="flex items-start gap-3 border-t border-white/10 py-3.5 first:border-t-0"
                   >
                     <span className="mt-px font-mono text-[0.7rem] font-semibold tabular-nums text-cyan/80">
                       {String(i + 1).padStart(2, "0")}
@@ -670,6 +590,13 @@ function CleanAndTuneSection() {
                   </li>
                 ))}
               </ol>
+              <p className="mt-6 border-t border-white/10 pt-5 text-sm leading-relaxed text-white/60">
+                The HVAC division also offers the published{" "}
+                <Link href="/services/hvac" className="font-semibold text-cyan underline decoration-cyan/40 underline-offset-2 hover:decoration-cyan">
+                  $89 Clean &amp; Tune
+                </Link>{" "}
+                — a 10-point service, twice a year.
+              </p>
             </div>
           </div>
         </div>
@@ -679,22 +606,19 @@ function CleanAndTuneSection() {
 }
 
 /**
- * The tear line. A dashed rule with a notch bitten out of the card at each
- * end — vertical between the two halves on a wide screen, horizontal between
- * them when they stack. The notches are discs in the page's own white,
- * clipped in half by the card's `overflow-hidden`.
+ * The tear line — a dashed rule with a notch bitten out of the card at each
+ * end, vertical between the halves on a wide screen and horizontal when they
+ * stack. The notches are discs in the page's own white, clipped in half by the
+ * card's `overflow-hidden`.
  */
 function Perforation() {
-  const notch =
-    "absolute size-8 rounded-full bg-white";
+  const notch = "absolute size-8 rounded-full bg-white";
   return (
     <div className="relative lg:w-px" aria-hidden="true">
-      {/* Stacked: a horizontal tear. */}
       <span className="absolute inset-x-6 top-0 h-px -translate-y-1/2 bg-[repeating-linear-gradient(90deg,rgb(255_255_255/0.3)_0_6px,transparent_6px_14px)] md:inset-x-10 lg:hidden" />
       <span className={cn(notch, "left-0 top-0 -translate-x-1/2 -translate-y-1/2 lg:hidden")} />
       <span className={cn(notch, "left-full top-0 -translate-x-1/2 -translate-y-1/2 lg:hidden")} />
 
-      {/* Side by side: a vertical tear. */}
       <span className="absolute inset-y-12 left-1/2 hidden w-px -translate-x-1/2 bg-[repeating-linear-gradient(180deg,rgb(255_255_255/0.3)_0_6px,transparent_6px_14px)] lg:block" />
       <span className={cn(notch, "left-1/2 top-0 hidden -translate-x-1/2 -translate-y-1/2 lg:block")} />
       <span className={cn(notch, "left-1/2 top-full hidden -translate-x-1/2 -translate-y-1/2 lg:block")} />
@@ -704,20 +628,6 @@ function Perforation() {
 
 /* ----------------------------------------------------------------- why us */
 
-/**
- * Why us.
- *
- * Every previous version was a photograph on the left and a list of bullets on
- * the right, which is the most template-shaped layout there is. This one is
- * built around its own sentence: the statement runs at display size across the
- * space, the seal sits up with the heading as the mark that backs it, and the
- * four reasons run as a wide band of columns underneath rather than as a stack
- * of rows beside a picture.
- *
- * It was also the one band on the page with no warmth in it at all — navy and
- * cyan throughout — so the ember accents that carry the rest of the site come
- * back here.
- */
 function WhyUsSection() {
   return (
     <section className="band-navy grain grid-lines relative overflow-hidden">
@@ -729,7 +639,6 @@ function WhyUsSection() {
       </div>
 
       <div className="shell relative py-14 md:py-20">
-        {/* ------------------------------------------------- heading + seal */}
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
           <div>
             <SectionEyebrow index={3} className="text-cyan">
@@ -759,15 +668,14 @@ function WhyUsSection() {
 
         <div className="thermal-rule mt-10 w-full opacity-70" aria-hidden="true" />
 
-        {/* -------------------------------------------- statement + picture */}
         <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-14">
           <div>
             <p className="font-display text-[0.62rem] font-extrabold uppercase tracking-[0.24em] text-ember">
               How the work starts
             </p>
             <p className="mt-5 font-display text-[clamp(1.4rem,2.6vw,2rem)] font-extrabold leading-[1.22] text-white">
-              Most of our work starts as somebody else&rsquo;s quote. We find the
-              actual fault,{" "}
+              Most of our work starts as somebody else&rsquo;s quote. We inspect
+              it, {" "}
               <span className="text-chill">put a price in writing</span>, and let
               you decide what happens next.
             </p>
@@ -787,8 +695,6 @@ function WhyUsSection() {
           </div>
 
           <div className="relative mx-auto w-full max-w-sm lg:mx-0 lg:max-w-none">
-            {/* Registration marks, the way a plate is positioned on a press
-                sheet. */}
             <span
               className="pointer-events-none absolute -left-3 -top-3 size-6 border-l border-t border-ember/50"
               aria-hidden="true"
@@ -820,19 +726,18 @@ function WhyUsSection() {
               className="absolute -bottom-7 -right-5 aspect-[4/3] w-[46%] rounded-card object-cover object-[50%_58%] shadow-[0_26px_50px_-18px_rgb(3_12_32/0.95)] ring-1 ring-white/20 sm:-right-8"
             />
 
-            {/* The licence, stated on the picture rather than under it. */}
+            {/* The licences, stated on the picture rather than under it. */}
             <div className="absolute bottom-4 left-4 rounded-xl bg-navy-deep/85 px-3.5 py-2 ring-1 ring-white/20 backdrop-blur-sm">
               <p className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-white/50">
-                FL Mechanical
+                FL Licensed
               </p>
               <p className="font-mono text-[0.72rem] font-semibold tracking-[0.08em] text-white">
-                #{business.license}
+                {business.licenses.length} trades · insured
               </p>
             </div>
           </div>
         </div>
 
-        {/* ------------------------------------------------------- the four */}
         <ul className="mt-14 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
           {whyUs.map((w, i) => (
             <li key={w.title} className="group relative pt-5">
@@ -840,8 +745,6 @@ function WhyUsSection() {
                 className="absolute inset-x-0 top-0 h-px bg-white/15"
                 aria-hidden="true"
               />
-              {/* Short ember segment on the rule: the tick that says this
-                  column starts here. */}
               <span
                 className="absolute left-0 top-0 h-px w-10 bg-ember transition-all duration-500 group-hover:w-20"
                 aria-hidden="true"
@@ -877,20 +780,8 @@ function WhyUsSection() {
   );
 }
 
-/**
- * Reviews.
- *
- * A grid of equal cards is a testimonial widget; three of them staggered is
- * the same widget tilted. This is an editorial spread instead — one review at
- * display size carrying the section, and the others as a list you can move
- * between, which is the same "pick from the list, the panel answers" pattern
- * the coverage map uses. Reading a review should feel like reading, not like
- * scanning a row of boxes.
- *
- * No stars. A five-star row under a quote is a rating, and there is no rating
- * attached to any of these quotes — see the note in content/site.ts. They are
- * drawn only when a real one is supplied.
- */
+/* ---------------------------------------------------------------- reviews */
+
 function TestimonialsSection() {
   const [active, setActive] = useState(0);
   const t = testimonials[active];
@@ -908,7 +799,7 @@ function TestimonialsSection() {
             <SectionEyebrow index={4}>Reviews</SectionEyebrow>
             <h2 className="poster mt-4 text-[clamp(2rem,4.4vw,3.1rem)]">
               Real people.
-              <span className="block text-ember">Real comfort.</span>
+              <span className="block text-ember">Real results.</span>
             </h2>
           </div>
           <GoogleBadge />
@@ -917,15 +808,12 @@ function TestimonialsSection() {
         <div className="thermal-rule mt-8 w-full opacity-60" aria-hidden="true" />
 
         <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,0.9fr)] lg:items-stretch">
-          {/* ------------------------------------------- the one you read */}
           <figure className="band-ocean grain relative flex flex-col overflow-hidden rounded-[1.75rem] p-8 shadow-[0_34px_70px_-30px_rgb(5_15_38/0.65)] ring-1 ring-white/15 md:p-11">
             <div
               className="pointer-events-none absolute -right-24 -top-28 size-[26rem] rounded-full bg-cyan/14 blur-[110px]"
               aria-hidden="true"
             />
 
-            {/* The opening mark, set as type at a size that makes it part of
-                the composition rather than an icon in a corner. */}
             <span
               className="poster pointer-events-none select-none text-[5.5rem] leading-[0.5] text-orange-light md:text-[7rem]"
               aria-hidden="true"
@@ -977,7 +865,6 @@ function TestimonialsSection() {
             </figcaption>
           </figure>
 
-          {/* ------------------------------------------------ the others */}
           <div className="flex flex-col gap-5">
             <ul className="grid gap-2.5">
               {testimonials.map((r, i) => (
@@ -1027,7 +914,6 @@ function TestimonialsSection() {
               ))}
             </ul>
 
-            {/* The invitation, with the mascot's head over the top edge. */}
             <div className="card relative mt-14 flex flex-1 flex-col justify-center px-6 pb-6 pt-[5.25rem] text-center">
               <img
                 src="/brand/mascot-bust.webp"
@@ -1064,8 +950,6 @@ function TestimonialsSection() {
 
 /* ------------------------------------------------------------- financing */
 
-/** A replacement is the big-ticket decision on this page, so the number that
- *  actually governs it gets a section rather than a footnote. */
 function FinancingSection() {
   return (
     <section className="bg-foam py-14 md:py-20">
@@ -1078,17 +962,6 @@ function FinancingSection() {
 
 /* ------------------------------------------------------------------- faq */
 
-/**
- * Answers before you call.
- *
- * Nine questions grouped into three headings rather than six in a flat stack:
- * at that length a list needs an index, and the groups are the three things a
- * homeowner is actually deciding between — whether we cover them, what it
- * costs, and what happens to the equipment.
- *
- * The heading column stays put while the questions scroll past it, and the
- * card at its foot is the fallback for whatever the list did not answer.
- */
 function FaqSection() {
   return (
     <section className="grid-lines-light relative overflow-hidden bg-white py-16 md:py-24">
@@ -1106,8 +979,6 @@ function FaqSection() {
           </h2>
           <div className="thermal-rule mt-6 w-24" aria-hidden="true" />
 
-          {/* The fallback, with the mascot's head over its top edge — the same
-              move the reviews card makes, at a quarter of the size. */}
           <div className="card relative mt-14 p-6 pt-12">
             <img
               src="/brand/avatar-husky.webp"
@@ -1145,35 +1016,11 @@ function FaqSection() {
 
 /* ------------------------------------------------------------ how it works */
 
-/**
- * What happens after you call. Sits after the FAQ: by that point a visitor has
- * their questions answered and wants to know what actually follows. Laid out
- * along a single gradient track rather than four equal boxes, which is the
- * shape that reads as filler.
- */
-/**
- * Four accent stops taken off the brand's thermal rule: the run starts hot
- * where the customer is (a house that will not cool) and ends cold where the
- * job does. Each badge borrows the colour of the point it sits at.
- */
 const STEP_ACCENT = ["#ff6a13", "#ffb020", "#2bd9ff", "#5cb4ff"] as const;
 
-/** Softens both ends of the desktop rail so it reads as a run, not a bar. */
 const RAIL_FADE =
   "linear-gradient(90deg, transparent 0%, black 9%, black 91%, transparent 100%)";
 
-/**
- * The four steps, as a run you can move along.
- *
- * The rail is not decoration: it fills from the first badge to whichever step
- * is being pointed at, so the section behaves like the job it describes —
- * hover the third badge and the line has travelled three quarters of the way.
- * Nothing is hidden behind the interaction; all four steps are always legible,
- * and the rail only says where you are in them.
- *
- * It sits on the site's blue rather than on the near-black it used to, so the
- * band belongs to the same page as everything above it.
- */
 function HowItWorks() {
   const [active, setActive] = useState(0);
 
@@ -1192,12 +1039,10 @@ function HowItWorks() {
             </SectionEyebrow>
             <h2 className="poster mt-4 text-[clamp(1.9rem,4vw,2.9rem)] text-white">
               From your call to
-              <span className="block text-chill">cold air, in four.</span>
+              <span className="block text-chill">done, in four.</span>
             </h2>
           </div>
 
-          {/* Where you are in the run, in words, for anyone not using a
-              pointer. */}
           <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-white/55">
             Step {String(active + 1).padStart(2, "0")} / 04 ·{" "}
             <span className="text-white">{process[active].title}</span>
@@ -1208,8 +1053,6 @@ function HowItWorks() {
           className="relative mt-12 grid lg:mt-20 lg:grid-cols-4 lg:gap-x-6"
           onMouseLeave={() => setActive(0)}
         >
-          {/* Desktop rail. The track is dim; the run fills over it to the
-              active badge. Ends land on the first and last badge centres. */}
           <span
             className="pointer-events-none absolute inset-x-[11.5%] top-20 hidden h-[3px] rounded-full bg-white/15 lg:block"
             style={{ maskImage: RAIL_FADE, WebkitMaskImage: RAIL_FADE }}
@@ -1230,8 +1073,6 @@ function HowItWorks() {
                 key={step.title}
                 className="group relative flex gap-5 pb-10 last:pb-0 lg:block lg:pb-0 lg:text-center"
               >
-                {/* Phone rail: one segment per gap, each carrying the slice of
-                    the ramp between its two steps so the run stays continuous. */}
                 {next && (
                   <span
                     className="pointer-events-none absolute bottom-0 left-12 top-12 w-[3px] -translate-x-1/2 rounded-full lg:hidden"
@@ -1259,7 +1100,6 @@ function HowItWorks() {
                     style={{ background: accent }}
                     aria-hidden="true"
                   />
-                  {/* Station halo, just outside the ring of the artwork. */}
                   <span
                     className={cn(
                       "absolute rounded-full border opacity-70 transition-all duration-500",
@@ -1311,10 +1151,10 @@ function HowItWorks() {
           data-answer=""
           className="mt-14 max-w-3xl border-t border-white/12 pt-7 text-sm leading-relaxed text-white/58"
         >
-          {business.name} is a licensed, insured HVAC contractor in{" "}
-          {business.city}, Florida, serving {locations.length} cities across{" "}
-          {countyList} counties under Florida Mechanical Contractor licence #
-          {business.license}.
+          {business.name} is a licensed, insured contractor in {business.city},
+          Florida, serving {locations.length} cities across {countyList}{" "}
+          counties under three Florida licences:{" "}
+          {business.licenses.map((l) => l.number).join(", ")}.
         </p>
       </div>
     </section>

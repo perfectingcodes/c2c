@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import {
   business,
-  cleanAndTune,
   countyList,
+  estimate,
   locations,
   nav,
   services,
@@ -100,17 +100,16 @@ export function Navbar() {
         <div className="shell flex h-20 items-center justify-between gap-4 lg:h-24">
           {/* The lockup deliberately overhangs the bar, as in the brand sheet. */}
           <Link href="/" aria-label={`${business.name} — home`} className="shrink-0">
-            {/* Badge lockup, no mascot — the mascot has its own moments further
-                down the page and the header reads cleaner without it. */}
+            {/* The contracting badge lockup. Contained rather than overhanging:
+                it is a full wordmark, and the header reads cleaner and more
+                corporate with it sitting inside the bar. */}
             <img
-              src="/brand/logo-badge.webp"
-              srcSet="/brand/logo-badge-sm.webp 400w, /brand/logo-badge.webp 1000w"
-              sizes="(min-width: 1280px) 168px, (min-width: 1024px) 150px, 108px"
-              alt={`${business.name} — heating, cooling and mechanical`}
-              width={1000}
-              height={922}
+              src="/brand/logo-contracting.webp"
+              alt={`${business.name} — roofing, HVAC, construction and commercial`}
+              width={1024}
+              height={906}
               fetchPriority="high"
-              className="h-[4.75rem] w-auto drop-shadow-[0_8px_18px_rgb(11_37_69/0.3)] sm:h-24 lg:h-[8.5rem] lg:-mb-12 lg:drop-shadow-[0_16px_30px_rgb(11_37_69/0.45)] xl:h-[9.5rem] xl:-mb-14"
+              className="h-14 w-auto drop-shadow-[0_6px_16px_rgb(11_37_69/0.22)] sm:h-16 lg:h-[4.75rem]"
             />
           </Link>
 
@@ -234,16 +233,16 @@ export function Navbar() {
 
             {/* The live offer, carried over from the desktop panel. */}
             <Link
-              href="/services/repairs-maintenance"
+              href="/contact"
               className="band-navy grain mt-5 flex items-center gap-4 overflow-hidden rounded-card p-4 text-white"
             >
-              <span className="poster shrink-0 text-3xl">{cleanAndTune.price}</span>
+              <span className="poster shrink-0 text-3xl text-bullion">Free</span>
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-[0.55rem] font-extrabold uppercase tracking-[0.2em] text-gold">
-                  Limited-time offer
+                  {estimate.eyebrow}
                 </span>
                 <span className="mt-0.5 block font-display text-sm font-extrabold">
-                  {cleanAndTune.name}
+                  {estimate.name}
                 </span>
               </span>
               <ArrowRight className="size-4 shrink-0 text-cyan" aria-hidden="true" />
@@ -358,23 +357,21 @@ function ServicesMenu({ active }: { active: boolean }) {
 
             {/* Featured offer */}
             <Link
-              href="/services/repairs-maintenance"
+              href="/contact"
               className="band-navy grain group/offer relative flex flex-col justify-center overflow-hidden p-6 text-white"
             >
               <span className="font-display text-[0.58rem] font-extrabold uppercase tracking-[0.2em] text-gold">
-                Limited-time offer
+                {estimate.eyebrow}
               </span>
-              <span className="poster mt-2 text-4xl text-white">
-                {cleanAndTune.price}
-              </span>
+              <span className="poster mt-2 text-4xl text-bullion">Free</span>
               <span className="mt-1 font-display text-sm font-extrabold text-white">
-                {cleanAndTune.name}
+                {estimate.name}
               </span>
               <span className="mt-2 text-xs leading-relaxed text-white/60">
-                A 10-point service, twice a year.
+                An inspection, a written scope and a flat price.
               </span>
               <span className="mt-4 inline-flex items-center gap-1.5 font-display text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-cyan">
-                Book a visit
+                Get an estimate
                 <ArrowRight
                   className="size-3.5 transition-transform group-hover/offer:translate-x-0.5"
                   aria-hidden="true"

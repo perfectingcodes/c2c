@@ -1,25 +1,33 @@
 /**
  * Single source of truth for every word, number and route on the site.
  *
- * Business facts (phone, address, licenses, service areas, the Clean & Tune
- * checklist) are taken from the company's existing site, coastswfl.com.
+ * This is the home base for **Coast to Coast Contracting & Roofing** — one
+ * licensed company running three divisions: roofing, general contracting and
+ * HVAC. Pages, nav, footer, sitemap and structured data all derive from the
+ * arrays below. Add a division or a city and the routes follow on the next
+ * build, with no page edits.
  *
- * Items marked ⚠️ CONFIRM are not published anywhere public and were filled in
- * from the design comp — check them with the client before launch.
+ * Business facts (phone, address, licenses, the Clean & Tune checklist) carry
+ * over from the company's HVAC site, coastswfl.com.
+ *
+ * Items marked ⚠️ CONFIRM are not published anywhere public and were drafted
+ * for the contracting rebrand — check them with the client before launch.
  */
 
 // ------------------------------------------------------------------ business
 
 export const business = {
-  name: "Coast to Coast Air",
-  formalName: "Coast to Coast Air",
+  name: "Coast to Coast Contracting & Roofing",
+  formalName: "Coast to Coast Contracting & Roofing",
   legalName: "Coast to Coast Contracting & Roofing LLC",
-  tagline: "Florida Comfort. Coast to Coast.",
-  promise: "Comfort Lives Here.",
-  url: "https://coasttocoastair.com", // ⚠️ CONFIRM final domain
+  /** Short trading name for tight spots (the kinetic wordmark, mobile). */
+  shortName: "Coast to Coast",
+  tagline: "One company. Every trade. Coast to Coast.",
+  promise: "Built to last here.",
+  url: "https://coasttocoastcontracting.com", // ⚠️ CONFIRM final domain
   phone: "(239) 518-5928",
   phoneHref: "tel:+12395185928",
-  email: "info@coasttocoastair.com", // ⚠️ CONFIRM
+  email: "info@coasttocoastcontracting.com", // ⚠️ CONFIRM
   street: "7200 Bucks Ln",
   city: "Fort Myers",
   state: "FL",
@@ -30,20 +38,35 @@ export const business = {
   lng: -81.8226,
   hours: "Mon–Fri, 8am–5pm",
   emergency: "24/7 emergency service",
-  /** Florida Mechanical Contractor license — the one that covers HVAC work. */
-  license: "CMC1251768",
+  /**
+   * Headline licence — the general (residential) contractor licence that
+   * anchors the construction side. The full set, one per division, is below.
+   */
+  license: "CRC1335475",
+  /**
+   * The three Florida licences map one-to-one to the three divisions. The
+   * labels below follow the Florida DBPR prefix convention:
+   *   CRC = Certified Residential Contractor → general contracting
+   *   CCC = Certified Roofing Contractor     → roofing
+   *   CMC = Certified Mechanical Contractor  → HVAC
+   *
+   * ⚠️ CONFIRM — the company's current site (coastswfl.com) lists these with
+   * the CRC/CCC labels swapped (CRC shown as "Roofing", CCC as "Residential").
+   * That contradicts the DBPR prefixes, so the client must confirm which
+   * number belongs to which trade before launch. A licence number printed
+   * beside the wrong trade is a compliance problem, not a copy nit.
+   */
   licenses: [
-    { label: "Mechanical Contractor", number: "CMC1251768" },
-    { label: "Residential Contractor", number: "CRC1335475" },
-    { label: "Certified Contractor", number: "CCC1336116" },
+    { label: "Roofing Contractor", number: "CCC1336116", division: "Roofing" },
+    { label: "Residential Contractor", number: "CRC1335475", division: "General Contracting" },
+    { label: "Mechanical Contractor", number: "CMC1251768", division: "HVAC" },
   ],
-  /** Used in the schema.org `logo` field and as the OG fallback. The rest of
-   *  the brand kit (badge-only mark, mascot cut-out) is built to
-   *  /brand/ by scripts/brand-assets.py and is available for future pages. */
-  logo: "/brand/logo-mascot.png",
+  /** Used in the schema.org `logo` field and as the OG fallback. The
+   *  contracting badge, background knocked out by scripts/contracting-assets.py. */
+  logo: "/brand/logo-contracting.png",
   ogImage: "/og.jpg",
   social: {
-    google: "https://www.google.com/search?q=Coast+to+Coast+Air+Fort+Myers",
+    google: "https://www.google.com/search?q=Coast+to+Coast+Contracting+Fort+Myers",
     facebook: "https://www.facebook.com/",
     instagram: "https://www.instagram.com/coast2coast_swfl",
   },
@@ -62,9 +85,15 @@ export const nav = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
-// ------------------------------------------------------------------ services
+// ----------------------------------------------------------------- divisions
 
 export type IconName =
+  // roofing / contracting
+  | "roof"
+  | "hardhat"
+  | "hammer"
+  | "home"
+  // hvac
   | "flame"
   | "snowflake"
   | "cog"
@@ -72,54 +101,21 @@ export type IconName =
   | "building"
   | "wind";
 
-/**
- * Each service gets a differently shaped detail block, because each service
- * genuinely answers a different question. Maintenance is sold on a price and a
- * checklist; commercial is sold on property type; air quality is sold on
- * symptoms. The page layout switches on `detail.kind` rather than pouring six
- * different products into one template.
- */
-export type ServiceDetail =
-  /** Heating — what fails in a system that sits idle eleven months a year. */
-  | {
-      kind: "seasonal";
-      heading: string;
-      lead: string;
-      items: { title: string; body: string }[];
-    }
-  /** Cooling — runtime, lifespan, and the signs a system is going. */
-  | {
-      kind: "lifespan";
-      heading: string;
-      lead: string;
-      stats: { value: string; label: string }[];
-      signsHeading: string;
-      signs: string[];
-    }
-  /** Mechanical — the licensed, code-governed work behind the equipment. */
-  | {
-      kind: "credential";
-      heading: string;
-      lead: string;
-      components: { name: string; body: string }[];
-    }
-  /** Repairs & maintenance — the published offer is the page. */
-  | { kind: "offer" }
-  /** Commercial — segmented by property type, not by equipment. */
-  | {
-      kind: "segments";
-      heading: string;
-      lead: string;
-      segments: { name: string; body: string; points: string[] }[];
-    }
-  /** Air quality — symptom, cause, fix. */
-  | {
-      kind: "symptoms";
-      heading: string;
-      lead: string;
-      rows: { symptom: string; cause: string; fix: string }[];
-    };
+/** A single thing a division does — rendered as a numbered capability row. */
+export interface Capability {
+  title: string;
+  body: string;
+}
 
+/**
+ * A division. The company runs three of them under one licence stack, and the
+ * site is built around that: one clean division page each, rather than a
+ * sprawling per-service tree. The HVAC division carries the published Clean &
+ * Tune offer; the others close on a free estimate.
+ *
+ * The export is still called `services` because that is what a visitor calls
+ * them ("your services") and what the nav and footer read.
+ */
 export interface Service {
   slug: string;
   name: string;
@@ -128,341 +124,304 @@ export interface Service {
   /** Even shorter label for <title> tags, where ~60 characters is the budget.
    *  Falls back to `short`. */
   seoShort?: string;
-  /** Drives which layout this service page renders. */
-  detail: ServiceDetail;
-  /** Shown as a card on the home page. The rest are linked below the grid. */
+  /** Three or four words for a menu row. A restatement of `blurb`, never a
+   *  new claim. */
+  menuLine: string;
+  /** Shown as a card on the home page. */
   featured?: boolean;
   /** One line under the card title. */
   blurb: string;
-  /** Three or four words for a menu row. A restatement of `blurb`, never a
-   *  new claim — the navigation is not the place to introduce one. */
-  menuLine: string;
-  /** Two or three sentences opening the service page. */
+  /** Two or three sentences opening the division page. */
   intro: string;
   icon: IconName;
-  /** Accent treatment on the service card icon. */
+  /** Accent treatment on the division card icon. */
   accent: "orange" | "cyan" | "slate" | "blue" | "gold";
+  /** Heading + lead over the capabilities grid. */
+  capHeading: string;
+  capLead: string;
+  /** What the division actually does. */
+  capabilities: Capability[];
+  /** Short proof points. */
   bullets: string[];
+  /** The Florida licence that governs this division. */
+  licence: { label: string; number: string };
   faqs: { q: string; a: string }[];
+  /** HVAC carries the published Clean & Tune offer; others do not. */
+  hasOffer?: boolean;
 }
 
 export const services: Service[] = [
+  // ------------------------------------------------------------- roofing
   {
-    slug: "heating",
+    slug: "roofing",
     featured: true,
-    name: "Heating Services",
-    short: "Heating",
-    menuLine: "Installation, repair and maintenance",
+    name: "Roofing",
+    short: "Roofing",
+    menuLine: "Replacement, repair and inspection",
     blurb:
-      "Stay warm and comfortable all season long with expert heating installation, repair, and maintenance.",
+      "Roof replacement, repair and storm-damage work built for Gulf Coast wind, sun and rain.",
     intro:
-      "Florida winters are short, which is exactly why heating problems go unnoticed until the first cold snap. We service heat pumps, electric strip heat and gas furnaces, and we test heating operation as part of every maintenance visit rather than waiting for January.",
-    icon: "flame",
+      "A roof in Southwest Florida takes a harder beating than almost anywhere — relentless UV, salt air, driving summer rain and hurricane-season wind. We replace, repair and inspect shingle, tile, metal and flat roofs to current Florida wind code, and we document the work the way insurers and inspectors expect to see it.",
+    icon: "roof",
     accent: "orange",
-    detail: {
-      kind: "seasonal",
-      heading: "What fails in a system that sits idle",
-      lead: "Heat runs a handful of nights a year here, so heating faults are almost always discovered on the coldest night rather than during the season. These are the four we find most often, and all four are visible during a maintenance visit months earlier.",
-      items: [
-        {
-          title: "A reversing valve that will not shift",
-          body: "The heat pump cools all summer and then refuses to run backwards in December. The valve or its solenoid has seized after months in one position.",
-        },
-        {
-          title: "Open or corroded heat strips",
-          body: "Electric backup heat sits unused and unprotected. A single open element halves the output without throwing a code, so the house just never quite warms up.",
-        },
-        {
-          title: "A pitted contactor",
-          body: "The same contactor that carried the cooling season is asked to close on a cold start. Pitted contacts either chatter or weld shut.",
-        },
-        {
-          title: "Changeover wired wrong",
-          body: "On a system that has been serviced by several people, the O/B changeover terminal is frequently set for the wrong manufacturer — the system heats when it should cool and the other way round.",
-        },
-      ],
-    },
+    licence: { label: "Roofing Contractor", number: "CCC1336116" },
+    capHeading: "Every roof system, to Florida wind code",
+    capLead:
+      "Which roof you need depends on the home, the HOA and the budget — not on what we happen to stock. We install and service all four of the systems common on the Gulf Coast, and we tell you honestly when a repair will outlast a replacement.",
+    capabilities: [
+      {
+        title: "Asphalt shingle roofing",
+        body: "The workhorse of Florida re-roofs — architectural shingles rated for high wind, installed over a sealed, code-compliant underlayment that does the real waterproofing.",
+      },
+      {
+        title: "Tile roofing",
+        body: "Concrete and clay tile repair and replacement, including the flashing and underlayment work underneath that most tile failures actually trace back to.",
+      },
+      {
+        title: "Metal roofing",
+        body: "Standing-seam and metal systems built for longevity and wind uplift — the roof many coastal homeowners move to after a storm.",
+      },
+      {
+        title: "Flat & low-slope roofing",
+        body: "TPO, modified-bitumen and coating systems for flat residential sections and light commercial buildings, detailed properly at the edges and penetrations.",
+      },
+      {
+        title: "Roof repair & leak diagnosis",
+        body: "Finding where the water actually enters — rarely where the stain appears — and fixing the cause, not just the symptom.",
+      },
+      {
+        title: "Storm damage & insurance claims",
+        body: "Documented inspections and scopes that give your adjuster what they need, and a roof rebuilt to current code once a claim is approved.",
+      },
+      {
+        title: "Roof Guard maintenance program",
+        body: "A bi-annual inspection and tune-up that catches lifted shingles, failing sealant and clogged valleys before they become the leak — the roofing side of preventive maintenance.",
+      },
+    ],
     bullets: [
-      "Heat pump repair, replacement and reversing-valve diagnostics",
-      "Electric strip heat and gas furnace service",
-      "Heating operation verified on every maintenance visit",
-      "Safety checks on electrical connections and amp draws",
+      "Licensed Florida roofing contractor — CCC1336116",
+      "Shingle, tile, metal and flat systems to current wind code",
+      "Free roof inspections and written estimates",
+      "Storm-damage documentation for insurance claims",
+      "Roof Guard — bi-annual roof maintenance program",
     ],
     faqs: [
       {
-        q: "Do I really need heating in Southwest Florida?",
-        a: "Most homes here run heat only a handful of nights a year, but those nights arrive without warning. Because the system sits idle for months, a failed heat strip or reversing valve usually shows up the first time you actually need it — which is why we test heating during maintenance.",
+        q: "Do I need a full replacement or just a repair?",
+        a: "Often a repair. We inspect first and tell you honestly — a localized leak around a vent or a section of lifted shingles is usually a repair, while widespread granule loss, failing underlayment or storm damage across the field points to replacement. You get that assessment in writing before you decide.",
       },
       {
-        q: "What kind of heating do most homes here use?",
-        a: "The majority run a heat pump with electric strip backup. The same outdoor unit that cools in summer reverses to heat in winter, so a cooling problem and a heating problem are often the same problem.",
+        q: "Do you work with insurance claims?",
+        a: "Yes. We document the damage, provide a detailed scope your adjuster can work from, and rebuild to current Florida code once the claim is approved. We'll tell you plainly whether we think you have a claim worth filing.",
+      },
+      {
+        q: "How long does a roof last in Southwest Florida?",
+        a: "Shorter than the brochure says. UV, salt air and hurricane-season wind mean a shingle roof here often lands at 15–20 years rather than 25–30, while tile and metal systems last considerably longer. Coastal and canal-front homes sit at the shorter end.",
       },
     ],
   },
+  // -------------------------------------------------- general contracting
   {
-    slug: "cooling",
+    slug: "contracting",
     featured: true,
-    name: "Cooling Services",
-    short: "Cooling",
-    menuLine: "AC systems and fast service",
+    name: "General Contracting",
+    short: "Contracting",
+    seoShort: "General Contractor",
+    menuLine: "Remodels, additions and repairs",
     blurb:
-      "Keep your home or business cool with high-performance AC systems and fast, reliable service.",
+      "Remodels, additions, exterior work and storm repairs — one licensed contractor, permits handled.",
     intro:
-      "Air conditioning in Southwest Florida runs close to year-round, and that runtime is why systems here last 10–15 years instead of 20. We diagnose what actually failed, quote it before we touch anything, and size replacements to the home rather than to the box that came out.",
-    icon: "snowflake",
-    accent: "cyan",
-    detail: {
-      kind: "lifespan",
-      heading: "Runtime is what wears these systems out",
-      lead: "Air conditioning here runs close to year-round, and that is the single biggest difference between a Florida system and the same equipment installed anywhere north of it. It is also why the numbers below look shorter than the manufacturer's brochure.",
-      stats: [
-        { value: "10–15", label: "Years of typical system life in this climate" },
-        { value: "2×", label: "Recommended service visits per year" },
-        { value: "45–55%", label: "Indoor humidity worth targeting" },
-        { value: "All", label: "Major brands serviced, in and out of warranty" },
-      ],
-      signsHeading: "Signs a system needs attention now",
-      signs: [
-        "Air from the vents is cool but never cold",
-        "The system runs continuously and never satisfies the thermostat",
-        "Water pooling near the air handler, or a ceiling stain beneath it",
-        "A breaker that trips when the outdoor unit starts",
-        "Ice forming on the refrigerant line at the condenser",
-        "A burning or musty smell in the first minutes of a cycle",
-      ],
-    },
+      "As a licensed Florida residential contractor, we handle the work that sits between a handyman and a specialist trade: kitchen and bath remodels, additions, exterior and water-damage repairs, and the permitting and inspections that go with them. One company is accountable for the whole job, start to finish.",
+    icon: "hardhat",
+    accent: "blue",
+    licence: { label: "Residential Contractor", number: "CRC1335475" },
+    capHeading: "The work behind one accountable contractor",
+    capLead:
+      "A remodel or a repair touches several trades, and the thing that goes wrong is almost always the hand-off between them. We hold the licence, pull the permits and coordinate the trades, so there is one number to call and one company responsible for the result.",
+    capabilities: [
+      {
+        title: "Kitchen & bathroom remodels",
+        body: "Full remodels coordinated end to end — demolition, rough-in, cabinetry, tile and custom finishes — on a written scope and schedule rather than an open-ended one.",
+      },
+      {
+        title: "Room additions",
+        body: "Additions and enclosures designed and built to code, with the structural, electrical and mechanical work tied together under one permit.",
+      },
+      {
+        title: "New home construction",
+        body: "Custom homes built from the ground up, on a design-build basis so the design, the budget and the construction answer to one company.",
+      },
+      {
+        title: "Commercial construction",
+        body: "Ground-up commercial projects and tenant build-outs for retail, office and restaurant spaces, scheduled around the hours a business has to keep.",
+      },
+      {
+        title: "Storm & water-damage repair",
+        body: "Rebuilding what wind and water damaged — from the structure out to the finishes — with the documentation an insurer expects.",
+      },
+      {
+        title: "Permitting & project management",
+        body: "Permits pulled, inspections scheduled and trades coordinated as part of the job — the paperwork and the hand-offs, handled for you.",
+      },
+    ],
     bullets: [
-      "Air conditioning repair on all major brands",
-      "System replacement with permitting handled",
-      "Refrigerant pressure and electrical amp-draw testing",
-      "Evaporator and condenser coil cleaning",
+      "Licensed Florida residential contractor — CRC1335475",
+      "Remodels, additions and new-home construction",
+      "Design-build and commercial build-outs",
+      "Permits pulled, inspections and trades managed",
+      "One company accountable for the whole job",
     ],
     faqs: [
       {
-        q: "How long do AC systems last around here?",
-        a: "Most residential systems last 10–15 years given near-constant summer runtime. Coastal and canal-front homes often land at the lower end of that range because salt air accelerates coil corrosion.",
+        q: "Do you handle permits and inspections?",
+        a: "Yes — on every job that needs them. Permitting and inspections are part of the scope, not an afterthought left to you. Properly permitted work is also what protects the value of the project when you sell.",
+      },
+      {
+        q: "Will I get a fixed price before work starts?",
+        a: "Yes. We put a written scope and price together before the job begins, so you are deciding on a number rather than a running tab. Change orders are agreed in writing if the scope changes mid-project.",
+      },
+      {
+        q: "Can one company really handle roofing, contracting and HVAC?",
+        a: "That is the point of the three licences. A re-roof that turns up rotted decking, a remodel that needs a new AC zone, or storm damage that spans the roof and the interior — all of it can be handled by one accountable company instead of three you have to coordinate yourself.",
+      },
+    ],
+  },
+  // ---------------------------------------------------------------- hvac
+  {
+    slug: "hvac",
+    featured: true,
+    name: "HVAC",
+    short: "HVAC",
+    seoShort: "HVAC & AC",
+    menuLine: "AC, heating and air quality",
+    blurb:
+      "Air conditioning, heating, maintenance and indoor air quality for homes and businesses.",
+    intro:
+      "Air conditioning in Southwest Florida runs close to year-round, and that runtime is why systems here last 10–15 years rather than twenty. Our mechanical division repairs, replaces and maintains residential and light-commercial systems, quotes flat before touching anything, and sizes replacements to the home rather than to the box that came out.",
+    icon: "snowflake",
+    accent: "cyan",
+    licence: { label: "Mechanical Contractor", number: "CMC1251768" },
+    capHeading: "Cooling, heating and the work behind it",
+    capLead:
+      "The mechanical side is more than a box on a pad: it is the ductwork, the drainage, the electrical and the air you actually breathe. We cover all of it, and the published Clean & Tune is the twice-yearly service that keeps it out of emergency status.",
+    capabilities: [
+      {
+        title: "Air conditioning repair & replacement",
+        body: "Repair on all major brands, and replacements sized and permitted properly — near-constant summer runtime is the single biggest reason a Florida system wears out early.",
+      },
+      {
+        title: "Heating service",
+        body: "Heat pumps, electric strip heat and gas furnaces, with heating operation verified on every maintenance visit rather than discovered on the first cold night.",
+      },
+      {
+        title: "Duct cleaning & sealing",
+        body: "Ductwork repair, cleaning and mastic sealing, air handlers and condensate systems — leaky duct in a hot attic wastes a real share of everything the system produces.",
+      },
+      {
+        title: "Clean & Tune maintenance",
+        body: "A flat-rate, 10-point preventive service twice a year that catches capacitor and drain failures before they strand you in August.",
+      },
+      {
+        title: "Energy-efficient upgrades & commercial HVAC",
+        body: "High-efficiency replacements sized to the home, plus light-commercial and multi-building service for HOAs, assisted living, restaurants and offices.",
+      },
+      {
+        title: "Indoor air quality",
+        body: "Humidity control, condensate and drain treatment, duct sealing and filtration — because in this climate the real air quality problem is moisture, not dust.",
+      },
+    ],
+    bullets: [
+      "Licensed Florida mechanical contractor — CMC1251768",
+      "Repair on all major brands, in and out of warranty",
+      "Duct cleaning & sealing and energy-efficient upgrades",
+      "Flat-rate pricing quoted in writing before work begins",
+      "$89 Clean & Tune, a 10-point service twice a year",
+    ],
+    hasOffer: true,
+    faqs: [
+      {
+        q: "How often should I service my AC?",
+        a: "Twice a year. Southwest Florida's humidity and near-year-round cooling put more strain on systems than cooler climates, so maintenance matters more here. March and October — either side of the heat — are the two best months to book it.",
       },
       {
         q: "Do I need a permit to replace my AC system?",
         a: "Yes. Florida building code requires a permit for HVAC system replacement, and we handle permitting as part of every replacement we install.",
       },
-    ],
-  },
-  {
-    slug: "mechanical",
-    name: "Mechanical Services",
-    short: "Mechanical",
-    menuLine: "Commercial and residential systems",
-    blurb:
-      "Expert mechanical solutions for commercial and residential systems.",
-    intro:
-      "Mechanical work is the part of HVAC that sits behind the equipment — ductwork, air handlers, condensate systems, electrical connections and the mounts holding it all down. We hold Florida Mechanical Contractor license CMC1251768 and do this work to code, with documentation.",
-    icon: "cog",
-    accent: "slate",
-    detail: {
-      kind: "credential",
-      heading: "The work behind the equipment",
-      lead: "Mechanical is the part of an HVAC system nobody photographs, and the part that decides whether new equipment can deliver what it promises. It is also the part governed by code and inspection, which is why it takes a licensed mechanical contractor.",
-      components: [
-        {
-          name: "Ductwork",
-          body: "Repair, replacement and mastic sealing at every joint and boot. Leaky duct in a hot attic wastes a meaningful share of everything the system produces.",
-        },
-        {
-          name: "Air handlers",
-          body: "Cabinet, coil and blower service, plus the return sizing that older homes frequently never had in the first place.",
-        },
-        {
-          name: "Condensate systems",
-          body: "Drain lines, P-traps, pans and chemical treatment — the most common single cause of an emergency call in this climate.",
-        },
-        {
-          name: "Electrical",
-          body: "Whips, disconnects, contactors and amp-draw verification, brought to current code as part of any replacement.",
-        },
-        {
-          name: "Pads and mounts",
-          body: "Hurricane-rated condenser mounts and elevated pads, which is what keeps an outdoor unit where you left it.",
-        },
-      ],
-    },
-    bullets: [
-      "Ductwork repair, replacement and sealing",
-      "Air handler and condensate system service",
-      "Hurricane-rated condenser mounts and elevated pads",
-      "Licensed mechanical contractor — CMC1251768",
-    ],
-    faqs: [
       {
-        q: "What counts as mechanical work?",
-        a: "Anything structural or code-governed around the equipment: ductwork, air handlers, condensate drains and pans, electrical whips and disconnects, and the pads and mounts the outdoor unit sits on.",
-      },
-      {
-        q: "Why do condenser mounts matter in Florida?",
-        a: "After Hurricane Ian, many homeowners moved to hurricane-rated mounts and elevated pads. An elevated, properly strapped condenser is far less likely to be lost to surge or wind-driven debris.",
+        q: "How long do AC systems last here?",
+        a: "Most residential systems last 10–15 years given near-constant summer runtime. Coastal and canal-front homes often land at the lower end because salt air accelerates coil corrosion.",
       },
     ],
   },
+  // ---------------------------------------------------------- commercial
   {
-    slug: "repairs-maintenance",
+    slug: "commercial",
     featured: true,
-    name: "Repairs & Maintenance",
-    short: "Repairs & Maintenance",
-    seoShort: "AC Maintenance",
-    menuLine: "Routine maintenance and fast repairs",
-    blurb:
-      "Prevent costly breakdowns with routine maintenance and fast, professional repairs.",
-    intro:
-      "Twice-yearly maintenance is not upselling in this climate — humidity and near-year-round cooling put more strain on equipment here than almost anywhere else in the country. Our Clean & Tune is a 10-point service, priced flat, and it catches the failures that otherwise strand you in August.",
-    icon: "wrench",
-    accent: "blue",
-    detail: { kind: "offer" },
-    bullets: [
-      "10-point Clean & Tune, twice a year",
-      "Capacitor readings taken before they fail",
-      "Condensate drain vacuum, flush and treatment",
-      "Flat pricing quoted before work begins",
-    ],
-    faqs: [
-      {
-        q: "How often should I get my AC serviced?",
-        a: "Twice a year. Southwest Florida's humidity and near-year-round cooling season put more strain on AC systems than cooler climates, so regular maintenance matters more here than it would up north.",
-      },
-      {
-        q: "What does the Clean & Tune include?",
-        a: "A 10-point inspection and service covering the thermostat, filter, condensate drains, capacitor readings, evaporator and condenser coils, electrical amp draws, refrigerant pressures and heating operation, finished with a written condition report.",
-      },
-    ],
-  },
-  {
-    slug: "commercial-hvac",
-    name: "Commercial HVAC",
+    name: "Commercial Services",
     short: "Commercial",
-    menuLine: "Keeping your doors open",
+    seoShort: "Commercial",
+    menuLine: "Roofing, HVAC & build-outs for business",
     blurb:
-      "Reliable commercial HVAC service that keeps your doors open and your customers comfortable.",
+      "Commercial roofing, HVAC and build-outs for businesses, HOAs and property managers — one company, scheduled around your hours.",
     intro:
-      "For a business, an HVAC failure is lost revenue, not just discomfort. We service light commercial and multi-building properties across Southwest Florida — including HOA communities and assisted living facilities — with scheduled maintenance that keeps equipment out of emergency status.",
+      "For a business, a roof leak or a cooling failure is lost revenue, not just an inconvenience. Our commercial side brings the same three licensed trades to properties that have to stay open — retail, restaurants, offices, HOAs and assisted living — with scheduled work, documentation boards and insurers actually need, and one point of contact across the whole building.",
     icon: "building",
     accent: "slate",
-    detail: {
-      kind: "segments",
-      heading: "What we cover, by property type",
-      lead: "Commercial work is not residential work at a larger scale — what a restaurant needs from us is nothing like what an HOA board needs. These are the four we are set up for.",
-      segments: [
-        {
-          name: "HOA and multi-building",
-          body: "Scheduled service across a whole community, with the documentation boards actually need.",
-          points: [
-            "One schedule covering every building",
-            "Condition reporting for budgets and reserve studies",
-            "Insurance documentation on request",
-          ],
-        },
-        {
-          name: "Assisted living and senior housing",
-          body: "Facilities where a cooling failure is a resident-safety problem, not an inconvenience.",
-          points: [
-            "Priority response",
-            "Planned maintenance that avoids occupied hours",
-            "Temporary cooling while parts ship",
-          ],
-        },
-        {
-          name: "Restaurants and retail",
-          body: "Kitchens and sales floors carry loads that consumer equipment specs do not anticipate.",
-          points: [
-            "Scheduling around opening hours",
-            "Make-up air and exhaust interaction",
-            "Rooftop unit service",
-          ],
-        },
-        {
-          name: "Medical and professional offices",
-          body: "Spaces where humidity and air quality are part of the operating requirement.",
-          points: [
-            "Humidity held inside a specified band",
-            "Filtration upgrades",
-            "After-hours work",
-          ],
-        },
-      ],
-    },
+    // Commercial work runs under the existing trade licences — roofing (CCC)
+    // and mechanical (CMC) cover commercial roofs and equipment, and
+    // tenant/build-out work runs under the residential/light-commercial
+    // contractor licence. ⚠️ CONFIRM — ground-up commercial construction in
+    // Florida generally requires a General (CGC) or Building (CBC) Contractor
+    // licence; confirm the company holds the right licence before advertising
+    // new commercial building (as opposed to roofing, HVAC and build-outs).
+    licence: { label: "Roofing Contractor", number: "CCC1336116" },
+    capHeading: "The whole building, kept running",
+    capLead:
+      "Commercial work is not residential work at a larger scale — a restaurant needs something different from an HOA board. We bring roofing, mechanical and build-out trades to each under one schedule, so the property has one company to call rather than three to coordinate.",
+    capabilities: [
+      {
+        title: "Commercial roofing",
+        body: "Flat and low-slope systems — TPO, modified bitumen and coatings — plus metal and re-roofs, with the inspections and documentation a commercial roof needs for its warranty and the board's reserves.",
+      },
+      {
+        title: "Commercial & rooftop HVAC",
+        body: "Rooftop units, multi-zone systems and scheduled maintenance for light-commercial and multi-building properties, worked around the hours you keep.",
+      },
+      {
+        title: "Tenant improvements & build-outs",
+        body: "Fit-outs and remodels for retail, office and restaurant spaces — one contractor coordinating the trades so the space opens on schedule.",
+      },
+      {
+        title: "HOA & property-manager programs",
+        body: "One service schedule across a whole community, with condition reporting for budgets, reserve studies and insurance on request.",
+      },
+      {
+        title: "Assisted living & senior housing",
+        body: "Facilities where a roof or cooling failure is a resident-safety problem: priority response, planned maintenance around occupied hours, and temporary measures while parts ship.",
+      },
+      {
+        title: "Maintenance agreements",
+        body: "Roof and HVAC on one preventive schedule, so small problems are found on a planned visit instead of during the storm or the heat wave.",
+      },
+    ],
     bullets: [
-      "Light commercial repair, replacement and maintenance",
-      "Multi-building and HOA community programs",
-      "Assisted living and senior housing facilities",
-      "Scheduled service that works around your hours",
+      "Commercial roofing, HVAC and build-outs under one company",
+      "Scheduled around your opening hours",
+      "Documentation for boards, reserves and insurers",
+      "HOA, assisted living, retail, restaurant and office",
     ],
     faqs: [
       {
         q: "Do you work with HOAs and property managers?",
-        a: "Yes. We handle multi-building properties and provide the documentation boards and managers need for budgeting, reserve studies and insurance.",
+        a: "Yes. We handle multi-building properties on one schedule and provide the condition reporting boards and managers need for budgeting, reserve studies and insurance.",
       },
       {
         q: "Can you service us outside business hours?",
-        a: "Yes. For retail, restaurants and medical offices we schedule around opening hours wherever the work allows.",
-      },
-    ],
-  },
-  {
-    slug: "indoor-air-quality",
-    featured: true,
-    name: "Indoor Air Quality",
-    short: "Air Quality",
-    menuLine: "Humidity, dust and allergens",
-    blurb:
-      "Control humidity, dust and allergens with air quality solutions built for the Gulf Coast.",
-    intro:
-      "In this climate the real air quality problem is humidity. Coastal moisture clogs condensate drains faster than inland homes and feeds mold growth in ductwork, so we measure humidity and fix the cause — drainage, duct leakage, a system that short-cycles — instead of selling you a filter.",
-    icon: "wind",
-    accent: "gold",
-    detail: {
-      kind: "symptoms",
-      heading: "Symptom, cause, and what we actually do",
-      lead: "Nearly every indoor air quality complaint in this climate traces back to moisture rather than dust. The useful question is never which filter to buy — it is which of these five you are looking at.",
-      rows: [
-        {
-          symptom: "The house feels clammy even at 74°",
-          cause: "An oversized system short-cycling — it hits temperature fast and never runs long enough to dehumidify",
-          fix: "Measure runtime and humidity, right-size at replacement, add dehumidification where the load genuinely calls for it",
-        },
-        {
-          symptom: "A musty smell in the first minutes of a cycle",
-          cause: "Biological growth on a permanently wet evaporator coil or in the drain pan",
-          fix: "Antimicrobial coil clean, drain line vacuum and flush, chemical treatment of the pan",
-        },
-        {
-          symptom: "A ceiling stain below the air handler",
-          cause: "A clogged condensate drain backing water up into the secondary pan",
-          fix: "Vacuum and flush the line, refill the P-trap, treat the pan and verify the float switch",
-        },
-        {
-          symptom: "Dust returns within days of cleaning",
-          cause: "Duct leakage pulling unconditioned attic air, and everything in it, into the supply",
-          fix: "Pressure-test the duct system and seal at joints and boots rather than cleaning it again",
-        },
-        {
-          symptom: "Allergies worse indoors than outdoors",
-          cause: "Return-side leakage and filter bypass, so a share of the air never passes through the filter at all",
-          fix: "Seal the return, correct filter sizing and fit, then discuss media or UV options",
-        },
-      ],
-    },
-    bullets: [
-      "Humidity measurement and dehumidification",
-      "Condensate drain cleaning and chemical treatment",
-      "Duct sealing and antimicrobial coil cleaning",
-      "Media and UV filtration options",
-    ],
-    faqs: [
-      {
-        q: "What indoor humidity should I aim for?",
-        a: "45–55% keeps mold growth down without making the house feel clammy. Above 60% for sustained periods is where problems start in Florida homes.",
+        a: "Yes. For retail, restaurants, offices and medical spaces we schedule around your opening hours wherever the work allows, and we keep priority response for occupied facilities.",
       },
       {
-        q: "Why do my drain lines clog so often?",
-        a: "Coastal humidity means your system pulls far more moisture out of the air than an inland system does. That water carries dust and biological growth into the drain, which is why we vacuum, flush and chemically treat the line at every maintenance visit.",
+        q: "What commercial work do you take on?",
+        a: "Commercial roofing, commercial and rooftop HVAC, tenant improvements and build-outs, and ongoing maintenance for existing buildings. For ground-up commercial construction, talk to us about the scope and we will tell you honestly what we are the right fit for.",
       },
     ],
   },
@@ -481,14 +440,12 @@ export const serviceBySlug = (slug: string) =>
  * `aggregateRating` in its structured data — inventing a star rating is a
  * Google policy violation and a manual-action risk.
  *
- * ⚠️ CONFIRM — once the real profile is live, set `reviewUrl` to the profile's
- * own review link and fill in `rating` and `count` from it. Stars, the count
- * and the `aggregateRating` markup all switch on together, in this one place.
+ * ⚠️ CONFIRM — once the contracting profile is live, set `reviewUrl` to the
+ * profile's own review link and fill in `rating` and `count` from it. Stars,
+ * the count and the `aggregateRating` markup all switch on together, here.
  */
 export const googleReviews: {
-  /** Public profile — where "read our reviews" points. */
   profileUrl: string;
-  /** Deep link that opens the write-a-review dialog. */
   reviewUrl: string;
   rating?: number;
   count?: number;
@@ -505,17 +462,18 @@ export const hasReviewData = (): boolean =>
 
 // ------------------------------------------------------------ featured offer
 
-/** The company's published maintenance offer, verbatim from coastswfl.com. */
+/** The company's published maintenance offer, verbatim from coastswfl.com.
+ *  It belongs to the HVAC division; the other divisions close on a free
+ *  estimate (see `estimate` below). */
 export const cleanAndTune = {
   name: "AC Clean & Tune",
   price: "$89",
   /**
-   * ⚠️ CONFIRM — the standard price this promotion discounts from.
-   *
-   * The site derives a struck-through price and a "save $X" figure from this.
-   * Advertising a saving against a price the business never actually charged
-   * is false advertising, so this must be the real standard rate. Set it to
-   * `undefined` and the sale framing disappears, leaving a plain $89 offer.
+   * ⚠️ CONFIRM — the standard price this promotion discounts from. The site
+   * derives a struck-through price and a "save $X" figure from this.
+   * Advertising a saving against a price the business never charged is false
+   * advertising, so this must be the real standard rate. Set it to `undefined`
+   * and the sale framing disappears, leaving a plain $89 offer.
    */
   regularPrice: "$189" as string | undefined,
   unit: "per visit",
@@ -535,6 +493,24 @@ export const cleanAndTune = {
   ],
 } as const;
 
+/**
+ * The company-wide offer. Roofing and contracting work is quoted, not priced
+ * off a shelf, so the honest promotion is a free, no-obligation estimate
+ * rather than a coupon. ⚠️ CONFIRM the exact wording with the client.
+ */
+export const estimate = {
+  eyebrow: "No cost, no obligation",
+  name: "Free project estimate",
+  summary:
+    "An inspection, a written scope and a flat price before you commit to anything — whether it's a roof, a remodel or a system replacement.",
+  points: [
+    "On-site inspection by a licensed contractor",
+    "A written scope of work, in plain language",
+    "A flat price — not a running hourly tab",
+    "No obligation and no high-pressure sales call",
+  ],
+} as const;
+
 // ----------------------------------------------------------------- locations
 
 export type SaltExposure = "canal" | "gulf" | "inland";
@@ -543,7 +519,7 @@ export interface Location {
   slug: string;
   city: string;
   county: string;
-  /** County office that issues the HVAC permit — differs per county. */
+  /** County office that issues building permits — differs per county. */
   permitAuthority: string;
   /** Approximate city-centre coordinates, used for LocalBusiness geo markup. */
   lat: number;
@@ -554,7 +530,7 @@ export interface Location {
   /** Genuinely local context, drawn from the company's own city pages. */
   intro: string;
   neighborhoods: string[];
-  /** Real conditions that change how equipment is specified and serviced here. */
+  /** Real conditions that change how a roof or a system is specified here. */
   conditions: {
     salt: SaltExposure;
     /** One line on the local housing stock. */
@@ -576,7 +552,7 @@ export const locations: Location[] = [
     lng: -81.8723,
     zips: ["33901", "33905", "33907", "33908", "33912", "33913", "33916", "33919", "33966"],
     intro:
-      "Fort Myers housing runs from historic homes in the Downtown River District to newer construction south of Daniels Parkway, and the two need very different things from an HVAC system. Older neighborhoods often have original ductwork and undersized returns, which changes what a replacement actually requires.",
+      "Fort Myers housing runs from historic homes in the Downtown River District to newer construction south of Daniels Parkway, and the two need very different things from a roof and a remodel. Older neighborhoods often have original roofs, ductwork and undersized electrical that change what any project actually requires.",
     neighborhoods: [
       "Downtown River District",
       "McGregor",
@@ -604,7 +580,7 @@ export const locations: Location[] = [
     lng: -81.9495,
     zips: ["33904", "33909", "33914", "33990", "33991", "33993"],
     intro:
-      "With more canal miles than any city in the world, Cape Coral's waterfront homes face humidity and salt exposure that inland Florida homes simply don't. Canal-front humidity accelerates coil corrosion and condensate drain clogs, and many homeowners have since upgraded to hurricane-rated outdoor condenser mounts and elevated pads.",
+      "With more canal miles than any city in the world, Cape Coral's waterfront homes face humidity and salt exposure inland Florida homes simply don't. Canal-front salt air shortens roof and condenser life alike, and many homeowners moved to metal roofs and hurricane-rated mounts after Ian.",
     neighborhoods: [
       "Pelican",
       "Yacht Club",
@@ -616,7 +592,7 @@ export const locations: Location[] = [
     conditions: {
       salt: "canal",
       housing:
-        "overwhelmingly single-family homes on canal lots, with condensers sited close to brackish water",
+        "overwhelmingly single-family homes on canal lots, close to brackish water",
       seasonal: false,
       stormImpact: true,
     },
@@ -631,7 +607,7 @@ export const locations: Location[] = [
     lng: -81.7948,
     zips: ["34102", "34103", "34104", "34105", "34112", "34113"],
     intro:
-      "Licensed, insured air conditioning service for Naples homes and businesses — from routine maintenance near the Naples Pier to full system replacement throughout Old Naples and Port Royal. A great many Naples homes also sit empty for months, and an unoccupied house in July is where humidity damage starts.",
+      "Licensed, insured roofing, contracting and HVAC for Naples homes and businesses — from Old Naples and Port Royal to East Naples and Golden Gate. A great many Naples homes also sit empty for months, and an unoccupied house in storm season is where roof and humidity damage starts unnoticed.",
     neighborhoods: [
       "Old Naples",
       "Port Royal",
@@ -657,7 +633,7 @@ export const locations: Location[] = [
     lng: -81.8009,
     zips: ["34108", "34109", "34110", "34119"],
     intro:
-      "North Naples' mix of high-rise condos along Vanderbilt Beach, established communities like Pelican Bay and Pelican Marsh, and the retail corridor around Mercato all place heavy, near-continuous demand on air conditioning systems. Salt air off Wiggins Pass and Barefoot Beach adds corrosion on top of that load.",
+      "North Naples' mix of beachfront condos along Vanderbilt Beach, established communities like Pelican Bay and Pelican Marsh, and the Mercato retail corridor all place heavy demand on roofs and air conditioning alike. Salt air off Wiggins Pass and Barefoot Beach adds corrosion on top of that load.",
     neighborhoods: [
       "Pelican Bay",
       "Vanderbilt Beach",
@@ -684,7 +660,7 @@ export const locations: Location[] = [
     lng: -81.7787,
     zips: ["34134", "34135"],
     intro:
-      "Licensed, insured air conditioning service for Bonita Springs homes and businesses — from routine maintenance near Barefoot Beach Preserve to full system replacement throughout Downtown Bonita Springs and Bonita Beach. Gulf-front humidity means condensate lines here need cleaning more often than inland homes.",
+      "Licensed, insured roofing, contracting and HVAC for Bonita Springs homes and businesses — from Barefoot Beach to Downtown Bonita Springs and Bonita Beach. Gulf-front wind and humidity are hard on roofs and condensate lines alike.",
     neighborhoods: [
       "Downtown Bonita Springs",
       "Bonita Beach",
@@ -711,7 +687,7 @@ export const locations: Location[] = [
     lng: -81.8068,
     zips: ["33928", "33967"],
     intro:
-      "Estero's rapid growth around Coconut Point and Miromar Outlets has brought a mix of established communities like The Brooks and Grandezza alongside newer construction in Corkscrew Shores and Copperleaf. Newer builds bring newer equipment, which makes warranty-correct maintenance worth doing properly.",
+      "Estero's rapid growth around Coconut Point and Miromar Outlets has brought established communities like The Brooks and Grandezza alongside newer construction in Corkscrew Shores and Copperleaf. Newer builds bring newer roofs and equipment, which makes warranty-correct work worth doing properly.",
     neighborhoods: [
       "The Brooks",
       "Grandezza",
@@ -737,7 +713,7 @@ export const locations: Location[] = [
     lng: -82.0454,
     zips: ["33950", "33955", "33982", "33983"],
     intro:
-      "Punta Gorda's waterfront homes along Charlotte Harbor and Punta Gorda Isles, along with the historic homes near Gilchrist Park and downtown, all rely on Coast to Coast for HVAC maintenance, repair, and replacement. Storm seasons have left a lot of systems running on replaced parts rather than replaced equipment.",
+      "Punta Gorda's waterfront homes along Charlotte Harbor and the historic homes near Gilchrist Park rely on Coast to Coast for roofing, repairs and HVAC. The storm seasons since Charley and Ian have left a lot of roofs and systems running on patched work rather than replacements.",
     neighborhoods: [
       "Historic Downtown Punta Gorda",
       "Punta Gorda Isles",
@@ -762,7 +738,7 @@ export const locations: Location[] = [
     lng: -82.0906,
     zips: ["33948", "33952", "33953", "33954", "33980", "33981"],
     intro:
-      "Port Charlotte's canal-front homes near Port Charlotte Beach Park, the growing Deep Creek area, and neighborhoods throughout South Port Charlotte and Port Charlotte West all trust Coast to Coast for HVAC maintenance, repair, and replacement. The housing stock skews older, so original air handlers are a common find here.",
+      "Port Charlotte's canal-front homes near the Beach Park, the growing Deep Creek area, and neighborhoods throughout South Port Charlotte all trust Coast to Coast for roofing, contracting and HVAC. The housing stock skews older, so original roofs and air handlers are a common find here.",
     neighborhoods: [
       "South Port Charlotte",
       "Port Charlotte West",
@@ -773,7 +749,7 @@ export const locations: Location[] = [
     conditions: {
       salt: "canal",
       housing:
-        "an older housing stock where original air handlers and undersized electrical service are common",
+        "an older housing stock where original roofs, air handlers and undersized electrical service are common",
       seasonal: false,
       stormImpact: true,
     },
@@ -787,7 +763,7 @@ export const locations: Location[] = [
     lng: -82.4543,
     zips: ["34285", "34292", "34293"],
     intro:
-      "Venice runs from the island itself — where Gulf-front condos and mid-century block homes sit a few hundred feet from open water — inland through Venice Gardens, South Venice and the newer construction out toward Wellen Park. The island and the inland neighborhoods are effectively two different service problems, and a condenser that lasts fifteen years east of the Trail will not last that long west of it.",
+      "Venice runs from the island itself — where Gulf-front condos and mid-century block homes sit a few hundred feet from open water — inland through Venice Gardens and South Venice to the newer construction out toward Wellen Park. The island and the inland neighborhoods are effectively two different jobs, and a roof that lasts twenty years east of the Trail will not last that long west of it.",
     neighborhoods: [
       "Venice Island",
       "Venice Gardens",
@@ -799,7 +775,7 @@ export const locations: Location[] = [
     conditions: {
       salt: "gulf",
       housing:
-        "a large share of 1970s and 1980s construction alongside newer inland development, so original ductwork and modern equipment often end up on the same system",
+        "a large share of 1970s and 1980s construction alongside newer inland development",
       seasonal: true,
       stormImpact: false,
     },
@@ -826,8 +802,7 @@ export const milesFromShop = (loc: { lat: number; lng: number }) =>
 
 /**
  * Service radius, rounded up from the farthest city we actually list rather
- * than written down. The schema declared 50 miles while Venice sits 54 out —
- * derived, that cannot drift again when a city is added.
+ * than written down, so it cannot drift when a city is added.
  */
 export const serviceRadiusMiles =
   Math.ceil(Math.max(...locations.map(milesFromShop)) / 5) * 5 + 5;
@@ -840,8 +815,7 @@ export const counties = [...new Set(locations.map((l) => l.county))];
 
 /**
  * "Lee, Collier, Charlotte and Sarasota" — derived rather than written out, so
- * adding a city in a new county cannot leave a stale list somewhere on the
- * site. `counties` already carries the word "County" on each entry.
+ * adding a city in a new county cannot leave a stale list somewhere.
  */
 export const countyList = (() => {
   const names = counties.map((c) => c.replace(/ County$/, ""));
@@ -852,18 +826,17 @@ export const countyList = (() => {
 
 // --------------------------------------------------------------------- proof
 
-
 /** `tag` is the same claim as `body`, compressed to a spec-sheet value. */
 export const whyUs = [
   {
-    title: "Certified technicians",
-    tag: "On staff",
-    body: "Licensed mechanical contractors on staff — never subcontracted.",
+    title: "Three licences, one company",
+    tag: "Roofing · Build · HVAC",
+    body: "Roofing, residential contracting and mechanical licences under one roof — never subcontracted out and back.",
   },
   {
     title: "Flat-rate pricing",
     tag: "In writing",
-    body: "The price is in writing before work starts, and it does not move.",
+    body: "A written scope and price before work starts, and it does not move.",
   },
   {
     title: "Locally owned",
@@ -878,15 +851,12 @@ export const whyUs = [
 ] as const;
 
 /**
- * ⚠️ CONFIRM — the first review is adapted from the company's published
- * testimonials; the other two are placeholders. Replace them with real,
- * attributable Google reviews before launch.
- */
-/**
- * ⚠️ No `rating` on any of these, and the cards only draw stars when one is
- * present. A five-star row under a quote is a rating, and we do not have one
- * for any of these quotes — the Google profile link is the honest proof until
- * real reviews are supplied.
+ * ⚠️ CONFIRM — these are drafted placeholders spanning the three divisions.
+ * Replace with real, attributable Google reviews before launch.
+ *
+ * No `rating` on any of these, and the cards only draw stars when one is
+ * present — a five-star row under a quote is a rating we do not have. The
+ * Google profile link is the honest proof until real reviews are supplied.
  */
 export const testimonials: {
   quote: string;
@@ -897,19 +867,19 @@ export const testimonials: {
 }[] = [
   {
     quote:
-      "They handled our HVAC installation start to finish and walked us through what we'd actually save. The energy difference showed up on the very first bill.",
+      "They re-roofed the whole house after Ian and handled the insurance paperwork start to finish. The crew was clean, fast, and the inspector passed it first time.",
     name: "James T.",
     city: "Fort Myers, FL",
   },
   {
     quote:
-      "Called with no cooling and had a technician out the same day. Flat price before he opened the panel, no upsell, no drama. Exactly what you want.",
+      "We used them for a kitchen remodel and then had them back for a new AC. One company, one number to call, and the price didn't move. Exactly what you want.",
     name: "Maria S.",
     city: "Naples, FL",
   },
   {
     quote:
-      "The Clean & Tune caught a failing capacitor before it left us without AC in August. Worth every penny for that alone.",
+      "Called about a roof leak and had someone out the same day. They found the actual cause, fixed it, and didn't try to sell me a whole new roof. Rare these days.",
     name: "Linda K.",
     city: "Cape Coral, FL",
   },
@@ -917,31 +887,31 @@ export const testimonials: {
 
 export const process = [
   {
-    title: "Tell us what's happening",
-    body: "Two minutes on the phone or the form. We ask what the system is doing, not for your life story.",
+    title: "Tell us what you need",
+    body: "Two minutes on the phone or the form. Roof, remodel or AC — we ask what the job is, not for your life story.",
     image: "step-1-call",
   },
   {
-    title: "We diagnose and price it",
-    body: "A technician finds the actual cause and gives you a flat price in writing before any work begins.",
+    title: "We inspect and price it",
+    body: "A licensed contractor inspects the work and gives you a flat price in writing before anything begins.",
     image: "step-2-quote",
   },
   {
     title: "The work gets done right",
-    body: "Repairs finish the same visit whenever the part is on the truck, and we leave the space cleaner than we found it.",
+    body: "Permits pulled, trades coordinated, and we leave the site cleaner than we found it.",
     image: "step-3-work",
   },
   {
     title: "We follow up",
-    body: "A check-in after the work, and a reminder when your next Clean & Tune comes due.",
+    body: "A check-in after the work, and the paperwork that protects the value of what we built.",
     image: "step-4-followup",
   },
 ] as const;
 
 export const guarantees = [
-  `Licensed and insured — Florida Mechanical Contractor #${business.license}`,
+  `Licensed and insured — FL ${business.licenses.map((l) => l.number).join(", ")}`,
   "Flat-rate pricing quoted in writing before work begins",
-  "Permits pulled and inspections scheduled on every replacement",
+  "Permits pulled and inspections scheduled on every project",
   "Locally owned and operated out of Fort Myers",
 ] as const;
 
@@ -950,11 +920,11 @@ export const guarantees = [
 /** ⚠️ CONFIRM every line below with the client before launch. */
 export const financing = {
   intro:
-    "A system replacement is rarely something you plan for. Financing options are available on approved credit so a failed system doesn't have to become a five-figure decision made in a single afternoon.",
+    "A new roof or a system replacement is rarely something you plan for. Financing options are available on approved credit so storm damage or a failed system doesn't have to become a five-figure decision made in a single afternoon.",
   points: [
     {
       title: "Apply in minutes",
-      body: "A short application with a decision in most cases the same day, so you know your options before you choose equipment.",
+      body: "A short application with a decision in most cases the same day, so you know your options before you choose materials.",
     },
     {
       title: "Monthly payments that fit",
@@ -970,9 +940,9 @@ export const financing = {
 // ------------------------------------------------------------------ season
 
 /**
- * Cooling load through the year in Southwest Florida. Used by the hero's
- * "right now" card, which reads the visitor's current month — real context
- * computed from the date, not a fabricated live sensor reading.
+ * Cooling load through the year in Southwest Florida — context for the HVAC
+ * division. Used by any readout that reads the visitor's current month: real
+ * context computed from the date, not a fabricated live sensor reading.
  */
 export const season: Record<
   string,
@@ -994,8 +964,7 @@ export const season: Record<
 
 /**
  * The two shoulder months, read off `season` rather than written down twice.
- * They are the months whose note already calls them the right time to service,
- * which is the honest answer to "when should I book the tune-up?".
+ * The honest answer to "when should I book the tune-up?".
  */
 export const bestServiceMonths = (() => {
   const full: Record<string, string> = {
@@ -1011,16 +980,27 @@ export const bestServiceMonths = (() => {
 // --------------------------------------------------------------------- faqs
 
 /**
- * Grouped, because six flat questions is a list and nine grouped ones is an
+ * Grouped, because a flat list of eight is a list and a grouped one is an
  * index. `group` is only used for presentation — the JSON-LD FAQPage and the
  * support bot both read q/a and ignore it.
  *
  * Every answer restates something the site already asserts elsewhere: the
- * licences, the published Clean & Tune price, same-day booking, the 24/7 line,
- * the flat price in writing, all-major-brands repair, and permits on every
- * replacement. Nothing new is claimed here.
+ * three licences, the free estimate, the published Clean & Tune price, the
+ * flat price in writing, permits on every project, and the 24/7 line.
  */
 export const generalFaqs = [
+  {
+    group: "Coverage & credentials",
+    q: "What do you do?",
+    a: "Three things, under one licensed company: roofing, general contracting and HVAC. A storm job that spans the roof, the interior and the AC can be handled by one accountable contractor instead of three you coordinate yourself.",
+  },
+  {
+    group: "Coverage & credentials",
+    q: "Are you licensed and insured?",
+    a: `Yes. Coast to Coast holds three Florida licences — ${business.licenses
+      .map((l) => `${l.label} ${l.number}`)
+      .join(", ")} — and carries liability and workers' compensation coverage. Certificates are available on request.`,
+  },
   {
     group: "Coverage & credentials",
     q: "What areas do you serve?",
@@ -1030,44 +1010,29 @@ export const generalFaqs = [
       .join(", ")} and everywhere between.`,
   },
   {
-    group: "Coverage & credentials",
-    q: "Are you licensed and insured?",
-    a: `Yes. Coast to Coast holds Florida Mechanical Contractor license ${business.license}, along with CRC1335475 and CCC1336116, and carries liability and workers' compensation coverage. Certificates are available on request.`,
-  },
-  {
-    group: "Coverage & credentials",
-    q: "How quickly can someone get out to me?",
-    a: `Same-day appointments across ${region} in most cases, and the line is answered by a person around the clock — ${business.emergency.toLowerCase()} is not an answering machine taking a message until Monday.`,
+    group: "What it costs",
+    q: "Do you charge for an estimate?",
+    a: "No. Roofing, remodels and system replacements all start with a free, no-obligation estimate: an inspection, a written scope and a flat price before you commit to anything.",
   },
   {
     group: "What it costs",
     q: "How will I know the price before you start?",
-    a: "A technician diagnoses the actual fault and puts a flat price in writing before anything is opened. It does not move because the job ran long, and there is no overtime markup.",
-  },
-  {
-    group: "What it costs",
-    q: "How much does AC maintenance cost?",
-    a: `Our AC Clean & Tune maintenance visit is ${cleanAndTune.price} ${cleanAndTune.unit}. It's a 10-point inspection and service covering the thermostat, filter, condensate drains, capacitor, coils and a full system diagnostic.`,
+    a: "A licensed contractor inspects the work and puts a flat price in writing before anything begins. It does not move because the job ran long, and any change in scope is agreed in writing.",
   },
   {
     group: "What it costs",
     q: "Do you offer financing?",
-    a: "Yes, on system replacements and larger repairs, with decisions in most cases the same day and no prepayment penalty. Call us and we'll walk through the options.",
+    a: "Yes, on roofs, system replacements and larger projects, with decisions in most cases the same day and no prepayment penalty. Call us and we'll walk through the options.",
   },
   {
-    group: "Service & equipment",
-    q: "How often should I service my AC?",
-    a: "Twice a year. Southwest Florida's humidity and near-year-round cooling season put more strain on AC systems than cooler climates, so regular maintenance matters more here than it would up north. March and October — either side of the heat — are the two best months to book it.",
+    group: "The work",
+    q: "Do you handle permits and insurance claims?",
+    a: "Yes. Permits are pulled and inspections scheduled as part of every project, and for storm damage we document the work and provide the scope your insurance adjuster needs.",
   },
   {
-    group: "Service & equipment",
-    q: "Do you work on every brand?",
-    a: "We repair all major brands, in and out of warranty. If a system is still under manufacturer warranty we will tell you before quoting a replacement part.",
-  },
-  {
-    group: "Service & equipment",
-    q: "Do I need a permit to replace my AC system?",
-    a: "Yes — Florida building code requires a permit for HVAC system replacement. We handle permitting as part of every replacement we install.",
+    group: "The work",
+    q: "How quickly can someone get out to me?",
+    a: `Same-day appointments across ${region} in most cases, and the line is answered by a person around the clock — ${business.emergency.toLowerCase()} is not an answering machine taking a message until Monday.`,
   },
 ] as const;
 
@@ -1075,8 +1040,8 @@ export const generalFaqs = [
 
 /** Verifiable facts only — nothing here is an unbacked claim. */
 export const stats = [
-  { value: `${locations.length}`, label: "Southwest Florida cities served" },
+  { value: `${services.length}`, label: "Service divisions under one company" },
   { value: `${business.licenses.length}`, label: "Florida contractor licenses held" },
-  { value: cleanAndTune.price, label: "AC Clean & Tune, 10-point service" },
+  { value: `${locations.length}`, label: "Southwest Florida cities served" },
   { value: "24/7", label: "Emergency service availability" },
 ] as const;

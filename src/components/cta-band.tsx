@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
  * sun on the horizon, palms at the edges, one action and one phone number.
  */
 export function CtaBand({
-  eyebrow = "Ready for a more comfortable tomorrow?",
-  title = "Let's Get Your Comfort Back on Track.",
-  cta = "Schedule Service",
+  eyebrow = "Ready to start your project?",
+  title = "Let's Build Something That Lasts.",
+  cta = "Get a Free Estimate",
   href = "/contact",
   mascot = false,
 }: {

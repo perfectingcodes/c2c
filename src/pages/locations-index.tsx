@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowRight, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { business, countyList, locations, region, services } from "@/content/site";
 import { saltNote } from "@/content/local";
 import { SiteLayout } from "@/components/layout/site-layout";
@@ -8,16 +8,19 @@ import { CtaBand } from "@/components/cta-band";
 import { Seo, breadcrumbNode, faqNode } from "@/lib/seo";
 
 /**
- * Service-area index, grouped by county. The county grouping is the point:
- * permitting, inspection and the local conditions all follow county lines, and
- * it gives the page a structure the city cards alone would not have.
+ * Service-area page, grouped by county. The county grouping is the point:
+ * permitting and inspection follow county lines, so the office that signs off
+ * your roof or your AC replacement depends on which county you are in.
+ *
+ * This is a single coverage page — the home base no longer carries a page per
+ * city — so the city cards describe the area rather than linking onward.
  */
 export default function LocationsIndex() {
   const path = "/locations";
   const counties = [...new Set(locations.map((l) => l.county))];
-  const answer = `${business.name} serves ${locations.length} cities across three Southwest Florida counties: ${counties.join(", ")}. That covers ${locations
+  const answer = `${business.name} serves ${locations.length} cities across ${countyList} counties — ${locations
     .map((l) => l.city)
-    .join(", ")}, with ${locations.reduce((n, l) => n + l.zips.length, 0)} ZIP codes in total. Every city gets the same licensed crew, flat-rate pricing and 24/7 emergency line at ${business.phone}.`;
+    .join(", ")}. Roofing, general contracting and HVAC, with the same licensed crew, flat-rate pricing and a 24/7 line at ${business.phone} in every one of them.`;
 
   const crumbs = [
     { name: "Home", path: "/" },
@@ -27,10 +30,10 @@ export default function LocationsIndex() {
   return (
     <>
       <Seo
-        title={`HVAC Service Areas in ${region} | ${business.name}`}
+        title={`Service Areas in ${region} | ${business.name}`}
         description={`${business.name} covers ${locations
           .map((l) => l.city)
-          .join(", ")} across ${countyList} counties. Licensed #${business.license}, 24/7 emergency service.`}
+          .join(", ")} across ${countyList} counties — roofing, contracting and HVAC. Licensed, insured, 24/7 emergency service.`}
         path={path}
         nodes={[
           faqNode(
@@ -72,11 +75,7 @@ export default function LocationsIndex() {
 
                 <div className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                   {cities.map((l) => (
-                    <Link
-                      key={l.slug}
-                      href={`/locations/${l.slug}`}
-                      className="card card-hover group flex h-full flex-col p-6"
-                    >
+                    <div key={l.slug} className="card flex h-full flex-col p-6">
                       <span className="inline-flex items-center gap-2 font-display text-sm font-bold text-blue">
                         <MapPin className="size-4" aria-hidden="true" />
                         {l.city}, {business.state}
@@ -94,14 +93,7 @@ export default function LocationsIndex() {
                           <dd>{saltNote(l).short}</dd>
                         </div>
                       </dl>
-                      <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-blue">
-                        {l.city} services
-                        <ArrowRight
-                          className="size-3.5 transition-transform group-hover:translate-x-0.5"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -114,10 +106,9 @@ export default function LocationsIndex() {
             <div>
               <h2 className="text-2xl md:text-3xl">Coverage at a glance</h2>
               <p className="mt-4 leading-relaxed text-navy/70">
-                Permitting and inspection follow county lines, which is why our
-                city pages list the office that issues the permit where you
-                live. Every service below is available in all{" "}
-                {locations.length} cities.
+                Permitting and inspection follow county lines — the table lists
+                the office that issues the permit where you live. Every division
+                below is available in all {locations.length} cities.
               </p>
               <ul className="mt-6 flex flex-wrap gap-2">
                 {services.map((s) => (

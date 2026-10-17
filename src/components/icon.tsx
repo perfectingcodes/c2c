@@ -2,7 +2,10 @@ import {
   Building2,
   Cog,
   Flame,
+  HardHat,
+  Hammer,
   Handshake,
+  Home,
   Map,
   ShieldCheck,
   Snowflake,
@@ -19,7 +22,12 @@ import {
  * stays free of component imports.
  */
 const map = {
-  // service icons
+  // division icons — roofing / contracting
+  roof: Home,
+  hardhat: HardHat,
+  hammer: Hammer,
+  home: Home,
+  // division icons — hvac
   flame: Flame,
   snowflake: Snowflake,
   cog: Cog,
